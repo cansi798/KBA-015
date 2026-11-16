@@ -161,6 +161,36 @@ footer a{color:var(--blue)}
 .fade{animation:fd .25s ease}
 @keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
+
+/* Hover und Fokus */
+.tile .ic,.dayc .num,.extra .ic,.today .big{transition:transform .25s cubic-bezier(.2,.8,.2,1),background .2s,color .2s,box-shadow .2s}
+.tile .foot .ico,.dayc .chev,.extra .go,.today .go .ico,.pager .ico{transition:transform .2s ease}
+.tile:before{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 2px var(--c);opacity:0;transition:opacity .2s;pointer-events:none}
+@media (hover:hover){
+  a.tile:hover:before{opacity:.55}
+  a.tile:hover .ic{transform:scale(1.08) rotate(-4deg);background:var(--c);color:#fff;box-shadow:0 6px 16px color-mix(in srgb,var(--c) 35%,transparent)}
+  a.tile.primary:hover{box-shadow:0 14px 34px rgba(0,119,166,.35)}
+  a.tile.primary:hover .ic{background:#fff;color:var(--blue)}
+  a.tile:hover .foot .ico{transform:translateX(5px)}
+  .dayc:hover{border-color:var(--c)!important}
+  .dayc:hover .num{background:var(--c);color:#fff;transform:scale(1.06)}
+  .dayc:hover .chev{transform:translateX(4px);color:var(--c)}
+  .dayc:hover .t{color:var(--navy)}
+  .today:hover .big{transform:scale(1.06) rotate(-3deg)}
+  .today:hover .go .ico{transform:translateX(4px)}
+  .extra:hover{border-color:var(--extra);background:#efe6fa}
+  .extra:hover .ic{transform:scale(1.08) rotate(90deg)}
+  .extra:hover .go{transform:translateX(4px)}
+  .pager a:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pager a:hover .ico{transform:translateX(3px)}
+  .pager a:first-child:hover .ico{transform:translateX(-3px)}
+  .bar .back:hover .ico{transform:translateX(-3px)}
+  .iconbtn:hover{background:#fff5f5;color:#b3261e;border-color:#f1c9c9}
+}
+.bar .back .ico{transition:transform .2s}
+a.tile:active,.dayc:active,.today:active,.extra:active,.pager a:active{transform:scale(.98)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #66b5d6;outline-offset:3px;border-radius:12px}
+
 /* Tablet */
 @media (max-width:900px){.tiles{grid-template-columns:repeat(2,1fr)}}
 /* Handy */
