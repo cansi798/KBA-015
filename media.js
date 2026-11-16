@@ -5,8 +5,8 @@
 // Leer lassen, solange es noch nichts gibt. Dann steht dort "folgt".
 window.MEDIA = {
   "tag01": {
-    "video": "",
-    "podcast": ""
+    "video": "media/tag01/video.mp4",
+    "podcast": "media/tag01/podcast.m4a"
   },
   "tag02": {
     "video": "",
