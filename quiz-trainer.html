@@ -21,7 +21,14 @@ select,input[type=number]{font:inherit;padding:5px 8px;border-radius:6px;border:
 .q label{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:8px;cursor:pointer;font-size:16px;line-height:1.4}
 .q label:hover{background:#F2F8FB}.q input{margin-top:4px;transform:scale(1.2)}
 label.right{background:#E2F3EA}label.wrong{background:#F8E1DE}
-.ex{margin-top:8px;background:#F2F8FB;border-radius:8px;padding:8px 10px;font-size:15px}
+.ex{margin-top:10px;border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.5;background:#F2F8FB;border-left:5px solid #0077A6}
+.ex.g{background:#EAF6EF;border-left-color:#2E8B57}.ex.b{background:#FCEDEB;border-left-color:#C0392B}
+.ex .vh{font-weight:700;font-size:15.5px;margin-bottom:4px}.ex.g .vh{color:#1E6B41}.ex.b .vh{color:#A32A1E}
+.ex .sel{margin:4px 0;font-size:14px;color:#333}.ex .why{margin-top:6px}.ex .why b{color:#003366}
+label .mk{display:none;margin-left:auto;flex:none;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;align-self:center;white-space:nowrap}
+label.right .mk,label.wrong .mk,label.missed .mk{display:inline-block}
+label.right .mk{background:#2E8B57;color:#fff}label.wrong .mk{background:#C0392B;color:#fff}
+label.missed{background:#F3FAF6;outline:2px dashed #2E8B57;outline-offset:-2px}label.missed .mk{background:#fff;color:#2E8B57;border:1px solid #2E8B57}
 .ok{color:#2E8B57;font-weight:700}.bad{color:#C0392B;font-weight:700}
 table{border-collapse:collapse;width:100%;font-size:14.5px}th{background:#003366;color:#fff;text-align:left;padding:6px 8px}td{border-bottom:1px solid #dde4ea;padding:6px 8px}
 #timer{font-weight:700;color:#C0392B;font-size:18px}
@@ -52,8 +59,16 @@ flt.addEventListener('change',upd);upd();
 document.getElementById('all').onclick=()=>{flt.querySelectorAll('input').forEach(x=>x.checked=true);upd();};
 document.getElementById('none').onclick=()=>{flt.querySelectorAll('input').forEach(x=>x.checked=false);upd();};
 function note(p){return p>=92?'sehr gut (1)':p>=81?'gut (2)':p>=67?'befriedigend (3)':p>=50?'ausreichend (4)':p>=30?'mangelhaft (5)':'ungenügend (6)';}
-function qhtml(q,name){const o=sh(q.options);return `<div class="meta">${esc(q.g)}</div><h3>${esc(q.q)}</h3>`+o.map(x=>`<label data-c="${x.c?1:0}"><input type="checkbox" name="${name}"> <span>${esc(x.t)}</span></label>`).join('');}
-function judge(div){let good=true;div.querySelectorAll('label').forEach(l=>{const c=l.dataset.c==='1',x=l.querySelector('input').checked;if(c)l.classList.add('right');if(x&&!c)l.classList.add('wrong');if(c!==x)good=false;});return good;}
+function qhtml(q,name){const o=sh(q.options);return `<div class="meta">${esc(q.g)}</div><h3>${esc(q.q)}</h3>`+o.map((x,j)=>`<label data-c="${x.c?1:0}" data-l="${'abcd'[j]}"><input type="checkbox" name="${name}"> <span><b>${'abcd'[j]})</b> ${esc(x.t)}</span><em class="mk"></em></label>`).join('');}
+let lastSel={mine:[],right:[]};
+function judge(div){let good=true;const mine=[],right=[];div.querySelectorAll('label').forEach(l=>{const c=l.dataset.c==='1',x=l.querySelector('input').checked,m=l.querySelector('.mk');l.classList.remove('right','wrong','missed');
+  if(x)mine.push(l.dataset.l);if(c)right.push(l.dataset.l);
+  if(c&&x){l.classList.add('right');m.textContent='✓ richtig gewählt';}else if(c&&!x){l.classList.add('missed');m.textContent='✓ richtig, fehlt';}else if(!c&&x){l.classList.add('wrong');m.textContent='✗ falsch gewählt';}
+  if(c!==x)good=false;});lastSel={mine,right};return good;}
+function fb(q,good){const {mine,right}=lastSel;
+  const vh=good?'✓ Richtig beantwortet':(mine.length?'✗ Leider nicht ganz richtig':'✗ Nicht beantwortet');
+  const sel=good?`Richtig ist ${right.join(' und ')}.`:`Ihre Auswahl ${mine.length?mine.join(' und '):'keine'}. Richtig ${right.length>1?'sind':'ist'} ${right.join(' und ')}.`;
+  return `<div class="ex ${good?'g':'b'}"><div class="vh">${vh}</div><div class="sel">${sel}</div><div class="why"><b>${good?'Darum ist das richtig.':'Darum ist es so.'}</b> ${esc(q.expl)}</div></div>`;}
 function show(id){['setup','run','examv','resv'].forEach(x=>document.getElementById(x).classList.toggle('hid',x!==id));scrollTo({top:0});}
 // Ueben
 let queue=[],done=0,right=0,total=0;
@@ -64,7 +79,7 @@ function next(){const box=document.getElementById('q'),ctl=document.getElementBy
   ctl.innerHTML='<button id="chk">Prüfen</button><button class="sec" id="stop">Beenden</button>';
   document.getElementById('stop').onclick=()=>show('setup');
   document.getElementById('chk').onclick=()=>{const g=judge(box);queue.shift();done++;if(g){right+=q._w?0:1;}else{q._w=true;queue.splice(Math.min(queue.length,3+Math.floor(Math.random()*4)),0,q);}
-    box.insertAdjacentHTML('beforeend',`<div class="ex"><span class="${g?'ok':'bad'}">${g?'Richtig.':'Leider falsch.'}</span> ${esc(q.expl)}</div>`);
+    box.insertAdjacentHTML('beforeend',fb(q,g));
     ctl.innerHTML='<button id="nx">Weiter</button>';document.getElementById('nx').onclick=next;};}
 document.getElementById('practice').onclick=()=>{const p=pool();if(!p.length)return alert('Bitte mindestens eine Gruppe wählen.');const n=Math.max(1,Math.min(p.length,+document.getElementById('nq').value||20));practice(sh(p).slice(0,n).map(q=>({...q,_w:false})));};
 // Probeklausur
@@ -75,11 +90,12 @@ document.getElementById('exam').onclick=()=>{const p=pool();if(p.length<5)return
   const lim=+document.getElementById('tl').value;clearInterval(tmr);const end=Date.now()+lim*60000;
   if(lim){tmr=setInterval(()=>{const s=Math.max(0,Math.round((end-Date.now())/1000));document.getElementById('timer').textContent='Restzeit '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(!s){clearInterval(tmr);finish();}},1000);}else document.getElementById('timer').textContent='';};
 function finish(){clearInterval(tmr);let ok=0;const per={};wrongList=[];
-  document.querySelectorAll('#eqs .q').forEach(d=>{const q=exam[+d.dataset.i];const g=judge(d);per[q.g]=per[q.g]||[0,0];per[q.g][1]++;if(g){ok++;per[q.g][0]++;}else wrongList.push(q);});
+  document.querySelectorAll('#eqs .q').forEach(d=>{const q=exam[+d.dataset.i];const g=judge(d);d.querySelector('.ex')?.remove();d.insertAdjacentHTML('beforeend',fb(q,g));per[q.g]=per[q.g]||[0,0];per[q.g][1]++;if(g){ok++;per[q.g][0]++;}else wrongList.push(q);});
   const p=Math.round(100*ok/exam.length);const rows=Object.entries(per).map(([g,v])=>`<tr><td>${esc(g)}</td><td>${v[0]} von ${v[1]}</td></tr>`).join('');
   show('resv');document.getElementById('resv').innerHTML=`<h2>Ergebnis der Probeklausur</h2><p style="font-size:20px"><b>${ok} von ${exam.length} richtig (${p} %)</b>, IHK-Note ${note(p)}</p><table><tr><th>Bereich</th><th>Richtig</th></tr>${rows}</table><p></p>`+
-  (wrongList.length?'<button id="wr">Nur die falschen Fragen üben</button>':'')+'<button class="sec" id="bk">Zurück zur Auswahl</button><button class="sec" id="rv">Klausur mit Lösungen ansehen</button>';
+  (wrongList.length?'<button id="wr">Nur die falschen Fragen üben</button>':'')+'<button class="sec" id="bk">Zurück zur Auswahl</button><button id="rv">Alle Fragen mit Erklärungen ansehen</button>';
   if(wrongList.length)document.getElementById('wr').onclick=()=>practice(wrongList.map(q=>({...q,_w:false})));
-  document.getElementById('bk').onclick=()=>show('setup');document.getElementById('rv').onclick=()=>{show('examv');document.querySelectorAll('#eqs .q').forEach(d=>{const q=exam[+d.dataset.i];if(!d.querySelector('.ex'))d.insertAdjacentHTML('beforeend',`<div class="ex">${esc(q.expl)}</div>`);});};}
+  document.getElementById('bk').onclick=()=>show('setup');document.getElementById('rv').onclick=()=>{show('examv');document.getElementById('efinish').classList.add('hid');document.getElementById('ecount').textContent='Auswertung mit Erklärungen';};}
+document.getElementById('exam').addEventListener('click',()=>document.getElementById('efinish').classList.remove('hid'));
 document.getElementById('efinish').onclick=finish;
 </script><a href="index.html" style="position:fixed;left:14px;bottom:14px;z-index:9999;background:#003366;color:#fff;font:600 14px/1 Inter,system-ui,sans-serif;padding:10px 14px;border-radius:10px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.2)">&larr; Zur Übersicht</a></body></html>

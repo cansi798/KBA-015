@@ -24,8 +24,20 @@ button.sec{background:#fff;color:#0077A6;border:1px solid #0077A6}
 .q input{margin-top:4px;transform:scale(1.2)}
 .q.ok{border-left:6px solid #2E8B57}.q.bad{border-left:6px solid #C0392B}
 label.right{background:#E2F3EA}label.wrong{background:#F8E1DE}
-.ex{display:none;margin-top:6px;font-size:14.5px;background:#F2F8FB;border-radius:8px;padding:8px 10px}
+.ex{display:none;margin-top:10px;font-size:15px;line-height:1.5;border-radius:10px;padding:12px 14px;background:#F2F8FB;border-left:5px solid #0077A6}
 .done .ex{display:block}
+.q.ok .ex{background:#EAF6EF;border-left-color:#2E8B57}
+.q.bad .ex{background:#FCEDEB;border-left-color:#C0392B}
+.ex .vh{font-weight:700;font-size:15.5px;margin-bottom:4px}
+.q.ok .ex .vh{color:#1E6B41}.q.bad .ex .vh{color:#A32A1E}
+.ex .sel{margin:4px 0;font-size:14px;color:#333}
+.ex .why{margin-top:6px}.ex .why b{color:#003366}
+label .mk{display:none;margin-left:auto;flex:none;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;align-self:center;white-space:nowrap}
+.done label .mk{display:inline-block}
+label.right .mk{background:#2E8B57;color:#fff}
+label.wrong .mk{background:#C0392B;color:#fff}
+label.missed .mk{background:#fff;color:#2E8B57;border:1px solid #2E8B57}
+label.missed{background:#F3FAF6;outline:2px dashed #2E8B57;outline-offset:-2px}
 #res{display:none;background:#fff;border-radius:12px;padding:16px 20px;margin-top:12px;border:2px solid #0077A6}
 #res b{font-size:22px;color:#003366}
 footer{font-size:12.5px;color:#666;margin:24px 0 30px;line-height:1.5}
@@ -47,18 +59,28 @@ function render(){
   const box=document.getElementById('qs'); box.innerHTML='';
   Q.forEach((q,i)=>{ const d=document.createElement('div'); d.className='q'; d.dataset.i=i;
     const opts=sh(q.options.map((o,k)=>({...o,k})));
-    d.innerHTML=`<h3><span>${i+1}.</span> ${esc(q.q)}</h3>`+opts.map(o=>`<label data-c="${o.c?1:0}"><input type="checkbox"> <span>${esc(o.t)}</span></label>`).join('')+`<div class="ex">${esc(q.expl)}</div>`;
+    d.innerHTML=`<h3><span>${i+1}.</span> ${esc(q.q)}</h3>`+opts.map((o,j)=>`<label data-c="${o.c?1:0}" data-l="${'abcd'[j]}"><input type="checkbox"> <span><b>${'abcd'[j]})</b> ${esc(o.t)}</span><em class="mk"></em></label>`).join('')+`<div class="ex"></div>`;
     box.appendChild(d); });
   box.querySelectorAll('input').forEach(x=>x.addEventListener('change',prog)); prog();
 }
 function prog(){ const n=[...document.querySelectorAll('.q')].filter(q=>q.querySelector('input:checked')).length; document.getElementById('pg').style.width=(100*n/Q.length)+'%'; document.getElementById('cnt').textContent=n+' von '+Q.length+' beantwortet'; }
 function note(p){ return p>=92?'sehr gut (1)':p>=81?'gut (2)':p>=67?'befriedigend (3)':p>=50?'ausreichend (4)':p>=30?'mangelhaft (5)':'ungenügend (6)'; }
 document.getElementById('eval').onclick=()=>{ let ok=0;
-  document.querySelectorAll('.q').forEach(q=>{ q.classList.add('done'); let good=true;
-    q.querySelectorAll('label').forEach(l=>{ const c=l.dataset.c==='1', x=l.querySelector('input').checked; l.classList.remove('right','wrong'); if(c) l.classList.add('right'); if(x&&!c) l.classList.add('wrong'); if(c!==x) good=false; });
-    q.classList.toggle('ok',good); q.classList.toggle('bad',!good); if(good) ok++; });
+  document.querySelectorAll('.q').forEach(q=>{ q.classList.add('done'); let good=true; const mine=[], right=[];
+    q.querySelectorAll('label').forEach(l=>{ const c=l.dataset.c==='1', x=l.querySelector('input').checked, m=l.querySelector('.mk');
+      l.classList.remove('right','wrong','missed'); m.textContent='';
+      if(x) mine.push(l.dataset.l); if(c) right.push(l.dataset.l);
+      if(c&&x){ l.classList.add('right'); m.textContent='✓ richtig gewählt'; }
+      else if(c&&!x){ l.classList.add('missed'); m.textContent='✓ richtig, fehlt'; }
+      else if(!c&&x){ l.classList.add('wrong'); m.textContent='✗ falsch gewählt'; }
+      if(c!==x) good=false; });
+    q.classList.toggle('ok',good); q.classList.toggle('bad',!good); if(good) ok++;
+    const e=Q[+q.dataset.i].expl, ex=q.querySelector('.ex');
+    const vh = good ? '✓ Richtig beantwortet' : (mine.length ? '✗ Leider nicht ganz richtig' : '✗ Nicht beantwortet');
+    const sel = good ? `Richtig ist ${right.join(' und ')}.` : `Ihre Auswahl ${mine.length?mine.join(' und '):'keine'}. Richtig ${right.length>1?'sind':'ist'} ${right.join(' und ')}.`;
+    ex.innerHTML=`<div class="vh">${vh}</div><div class="sel">${sel}</div><div class="why"><b>${good?'Darum ist das richtig.':'Darum ist es so.'}</b> ${esc(e)}</div>`; });
   const p=Math.round(100*ok/Q.length); const r=document.getElementById('res'); r.style.display='block';
-  r.innerHTML=`<b>${ok} von ${Q.length} richtig (${p} %)</b><br>IHK-Note ${note(p)}. Grün markiert sind die richtigen Antworten. Lesen Sie die Erklärungen bei den roten Fragen.`; scrollTo({top:0,behavior:'smooth'}); };
+  r.innerHTML=`<b>${ok} von ${Q.length} richtig (${p} %)</b><br>IHK-Note ${note(p)}. Unter jeder Frage steht jetzt, ob Ihre Antwort richtig war, welche Antworten richtig sind und warum. Mit „Nur Fehler zeigen“ sehen Sie nur die Fragen, die Sie noch üben sollten.`; scrollTo({top:0,behavior:'smooth'}); };
 document.getElementById('onlyf').onclick=()=>document.body.classList.toggle('only');
 document.getElementById('mix').onclick=()=>{render();scrollTo({top:0});};
 render();
