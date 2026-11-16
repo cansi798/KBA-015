@@ -203,6 +203,35 @@ footer a{color:var(--blue)}
 @media (hover:hover){.tile.sk .langs a:hover{background:var(--c);color:#fff;transform:translateY(-1px)}}
 @media (max-width:640px){.tile.sk{flex-wrap:wrap}.tile.sk .langs{flex:1 1 100%;margin-top:4px}}
 
+
+/* Seitenleiste Desktop */
+#side{display:none}
+@media (min-width:1080px){
+  #side{display:block;position:fixed;top:57px;left:0;bottom:0;width:272px;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:16px 12px 30px;z-index:10;scrollbar-width:thin}
+  #app .wrap,#app footer{margin-left:272px}
+  .wrap{max-width:1180px}
+  .bar-in{max-width:none;padding-left:22px;padding-right:22px}
+}
+#side .grp{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8a99a8;margin:18px 10px 6px}
+#side .grp:first-child{margin-top:4px}
+#side a.nv{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:11px;color:#2b3a48;font-size:14px;font-weight:600;transition:background .15s,color .15s}
+#side a.nv .ico{width:18px;height:18px;flex:none;color:#8a99a8}
+#side a.nv:hover{background:var(--bg);color:var(--navy)}
+#side a.nv:hover .ico{color:var(--blue)}
+#side a.nv.on{background:#e8f3f9;color:var(--navy)}
+#side a.nv.on .ico{color:var(--blue)}
+#side a.dy{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:11px;font-size:13.5px;color:#2b3a48;font-weight:600;transition:background .15s}
+#side a.dy:hover{background:var(--bg)}
+#side a.dy .n{flex:none;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;background:color-mix(in srgb,var(--c) 12%,#fff);color:var(--c)}
+#side a.dy .tt{flex:1;min-width:0;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#side a.dy .now{flex:none;font-size:10px;font-weight:800;padding:2px 6px;border-radius:99px;background:var(--blue);color:#fff}
+#side a.dy.on{background:#e8f3f9}
+#side a.dy.on .n{background:var(--c);color:#fff}
+#side .sub{margin:2px 0 6px 24px;padding-left:12px;border-left:2px solid var(--line)}
+#side .sub a{display:block;padding:5px 10px;border-radius:9px;font-size:13px;color:var(--muted);font-weight:500}
+#side .sub a:hover{background:var(--bg);color:var(--navy)}
+#side .sub a.on{color:var(--navy);font-weight:700;background:#f1f6fa}
+
 /* Hover und Fokus */
 .tile .ic,.dayc .num,.extra .ic,.today .big{transition:transform .25s cubic-bezier(.2,.8,.2,1),background .2s,color .2s,box-shadow .2s}
 .tile .foot .ico,.dayc .chev,.extra .go,.today .go .ico,.pager .ico{transition:transform .2s ease}
@@ -286,6 +315,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #66b5
 
 <div id="app" hidden>
   <div class="bar"><div class="bar-in" id="bar"></div></div>
+  <nav id="side" aria-label="Navigation"></nav>
   <main class="wrap" id="view"></main>
   <footer>© 2026 Waybuild Akademie, Waybuild UG (haftungsbeschränkt). Alle Rechte vorbehalten. · <a href="https://www.waybuild.de" target="_blank" rel="noopener">www.waybuild.de</a></footer>
 </div>
@@ -504,6 +534,43 @@ function skriptTile(d, p, c){
     <span class="langs">${L.map(([k,l,f])=>`<a href="${p+f}" target="_blank" rel="noopener" class="${k}">${l}</a>`).join("")}</span></div>`;
 }
 
+
+function side(){
+  const hs = location.hash || "#";
+  const m = hs.match(/^#(?:glossar\/)?tag(\d{2})/); const cur = m ? parseInt(m[1],10) : 0;
+  const isOn = x => hs === x ? "on" : "";
+  let s = `<div class="grp">Kurs</div>
+    <a class="nv ${hs==="#"||hs===""?"on":""}" href="#">${I("layers")}Übersicht</a>
+    <a class="nv ${hs.startsWith("#glossar")&&!cur?"on":""}" href="#glossar">${I("glos")}Glossar</a>
+    <a class="nv" href="quiz-trainer.html" target="_blank" rel="noopener">${I("target")}Quiz-Trainer</a>
+    <a class="nv" href="gesamtskript.pdf" target="_blank" rel="noopener">${I("lib")}Gesamtskript</a>
+    <a class="nv" href="games/galgen.html?tag=0">${I("hang")}Galgenmännchen</a>
+    <a class="nv" href="games/fighter.html?tag=0">${I("rocket")}Word-Fighter</a>`;
+  for (const k of Object.keys(TEILE)) {
+    const ds = DAYS.filter(d => String(d.teil)===k); if (!ds.length) continue;
+    s += `<div class="grp">${esc(TEILE[k])}</div>`;
+    for (const d of ds) {
+      const tg = `#tag${pad(d.n)}`;
+      s += `<a class="dy ${cur===d.n?"on":""}" href="${tg}" style="--c:${TCOL[d.teil]}" title="${esc(d.title)}"><span class="n">${d.n}</span><span class="tt">${esc(d.title)}</span>${status(d)==="now"?'<span class="now">Heute</span>':""}</a>`;
+      if (cur===d.n) {
+        const p = `tag${pad(d.n)}/`;
+        s += `<div class="sub">
+          <a href="${p}praesentation.pdf" target="_blank" rel="noopener">Präsentation</a>
+          <a href="${p}skript.pdf" target="_blank" rel="noopener">Skript</a>
+          <a href="${p}quiz.html">Quiz des Tages</a>
+          <a class="${isOn("#glossar/tag"+pad(d.n))}" href="#glossar/tag${pad(d.n)}">Fachbegriffe</a>
+          ${media(d.n,"video")?`<a class="${isOn(tg+"/video")}" href="${tg}/video">Video</a>`:""}
+          ${media(d.n,"podcast")?`<a class="${isOn(tg+"/podcast")}" href="${tg}/podcast">Podcast</a>`:""}
+          <a href="games/galgen.html?tag=${d.n}">Galgenmännchen</a>
+          <a href="games/fighter.html?tag=${d.n}">Word-Fighter</a>
+          <a class="${isOn(tg+"/zusatz")}" href="${tg}/zusatz">Zusatz (freiwillig)</a></div>`;
+      }
+    }
+  }
+  $("#side").innerHTML = s;
+  const on = $("#side .dy.on"); if (on && on.scrollIntoViewIfNeeded) on.scrollIntoViewIfNeeded(false);
+}
+
 function pager(n){
   const prev = n>1 ? `<a href="#tag${pad(n-1)}">${I("left")}Tag ${n-1}</a>` : "<span></span>";
   const next = n<DAYS.length ? `<a href="#tag${pad(n+1)}">Tag ${n+1}${I("right")}</a>` : "<span></span>";
@@ -522,7 +589,7 @@ function route(){
     else if (m[2]==="zusatz") { h = zusatzView(n); back = {href:`#tag${pad(n)}`, label:`Tag ${n}`}; }
     else { h = mediaView(n, m[2]); back = {href:`#tag${pad(n)}`, label:`Tag ${n}`}; }
   }
-  $("#bar").innerHTML = bar(back);
+  $("#bar").innerHTML = bar(back); side();
   $("#view").innerHTML = h; if (gm) glossarBind(gday); window.scrollTo(0,0);
 }
 function start(){ $("#gate").hidden = true; $("#app").hidden = false; route(); }
