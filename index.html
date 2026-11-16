@@ -137,6 +137,7 @@ a.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-h);border-color:
 .media{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
 .media video,.media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
 .media audio{width:100%}
+video::cue{font-family:Inter,system-ui,sans-serif;font-size:1.05em;line-height:1.35;background:rgba(0,0,0,.72);color:#fff}
 .note{font-size:13.5px;color:var(--muted)}
 
 footer{max-width:1120px;margin:0 auto;padding:0 20px 34px;font-size:12px;color:var(--muted);text-align:center}
@@ -363,7 +364,7 @@ function dayView(n){
     tile({href:p+"quiz.html", ic:"check", t:"Quiz des Tages", s:"60 Fragen mit Auswertung und Erklärungen", cls:"primary", foot:"Quiz starten"})+
   `</div></section>`;
   h += `<section class="sec fade"><div class="sec-h"><span class="dot" style="background:${c}"></span><h2>Video und Podcast</h2></div><div class="tiles">`+
-    (vid ? tile({href:`#tag${pad(n)}/video`, ic:"play", t:"Video", s:"Erklärvideo zum Tag", c:"#c0394f", foot:"Ansehen"})
+    (vid ? tile({href:`#tag${pad(n)}/video`, ic:"play", t:"Video", s:media(n,"untertitel")?"Erklärvideo zum Tag, mit Untertiteln":"Erklärvideo zum Tag", c:"#c0394f", foot:"Ansehen"})
          : tile({ic:"play", t:"Video", s:"Wird nach dem Unterricht ergänzt", cls:"soon", pill:"folgt"}))+
     (pod ? tile({href:`#tag${pad(n)}/podcast`, ic:"head", t:"Podcast", s:"Den Tag zum Anhören", c:"#1d8a6b", foot:"Anhören"})
          : tile({ic:"head", t:"Podcast", s:"Wird nach dem Unterricht ergänzt", cls:"soon", pill:"folgt"}))+
@@ -393,7 +394,9 @@ function mediaView(n, kind){
   if (v) {
     const m = v.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);
     if (m) body = `<iframe src="https://www.youtube-nocookie.com/embed/${m[1]}" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe>`;
-    else if (/\.(mp4|webm|mov)(\?.*)?$/i.test(v)) body = `<video src="${esc(v)}" controls preload="metadata" playsinline></video>`;
+    else if (/\.(mp4|webm|mov)(\?.*)?$/i.test(v)) { const sub = media(n,"untertitel");
+      body = `<video src="${esc(v)}" controls preload="metadata" playsinline>${sub?`<track kind="subtitles" src="${esc(sub)}" srclang="de" label="Deutsch" default>`:""}</video>`+
+        (sub?`<p class="note" style="margin:10px 2px 0">Untertitel sind eingeschaltet. Über das Menü im Player (CC oder ⋮) lassen sie sich aus- und einschalten.</p>`:""); }
     else if (/\.(mp3|m4a|wav|ogg)(\?.*)?$/i.test(v)) body = `<audio src="${esc(v)}" controls preload="metadata"></audio>`;
     else body = `<p><a style="color:var(--blue);font-weight:600" href="${esc(v)}" target="_blank" rel="noopener">${t} öffnen</a></p>`;
   }
