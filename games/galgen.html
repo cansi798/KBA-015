@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#003366"><meta name="robots" content="noindex,nofollow">
+<title>Galgenmännchen · KBA-015</title>
+<link rel="icon" href="../assets/logo.png">
+<script>try{if(localStorage.getItem('kba015_ok')!=='1'){location.replace('../index.html');}}catch(e){}</script>
+<style>
+@font-face{font-family:Inter;src:url(../assets/inter-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Inter;src:url(../assets/inter-600.woff2) format("woff2");font-weight:600}
+@font-face{font-family:Inter;src:url(../assets/inter-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:Inter;src:url(../assets/inter-800.woff2) format("woff2");font-weight:800}
+@font-face{font-family:Vazirmatn;src:url(../assets/vazir-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Vazirmatn;src:url(../assets/vazir-700.woff2) format("woff2");font-weight:700}
+:root{--blue:#0077A6;--navy:#003366;--ink:#14212e;--muted:#5b6b7a;--line:#e3e9ef;--bg:#f4f7fa;--ok:#1d8a6b;--bad:#c0392b;--r:18px;--shadow:0 1px 2px rgba(16,40,64,.06),0 6px 20px rgba(16,40,64,.06)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+.bar{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 18px}
+.back{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--navy);padding:8px 10px;border-radius:12px}.back:hover{background:var(--bg)}
+.ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sp{flex:1}.score{font-size:13px;font-weight:700;color:var(--muted);display:flex;gap:12px}
+.score b{color:var(--navy)}
+.wrap{max-width:980px;margin:0 auto;padding:18px}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:14px}
+.head h1{margin:0;font-size:24px;font-weight:800;color:var(--navy);flex:1;min-width:200px}
+select,.seg{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;font:600 14px Inter,sans-serif;color:var(--navy);box-shadow:var(--shadow)}
+.seg{display:inline-flex;padding:3px}.seg button{border:0;background:none;padding:6px 11px;border-radius:9px;font-weight:700;font-size:13px;color:var(--muted)}
+.seg button.on{background:var(--navy);color:#fff}.fa{font-family:Vazirmatn,Tahoma,sans-serif}
+.game{display:grid;grid-template-columns:300px 1fr;gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.gallows svg{width:100%;height:auto;display:block}
+.lives{display:flex;gap:4px;justify-content:center;margin-top:8px}.lives i{width:10px;height:10px;border-radius:50%;background:#d7dee5}.lives i.on{background:var(--bad)}
+.hint{font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em}
+.clue{font-size:17px;line-height:1.55;margin:6px 0 16px;color:#22313f;min-height:54px}
+.clue[dir=rtl]{font-family:Vazirmatn,Tahoma,sans-serif;font-size:18px;line-height:1.9;text-align:right}
+.word{display:flex;flex-wrap:wrap;gap:14px 18px;margin:6px 0 18px;min-height:56px}
+.wgroup{display:flex;gap:6px}
+.ch{width:30px;height:44px;border-bottom:3px solid var(--navy);display:flex;align-items:flex-end;justify-content:center;font-size:26px;font-weight:800;color:var(--navy);padding-bottom:2px}
+.ch.sym{border-bottom-color:transparent;width:14px}
+.ch.miss{color:var(--bad)}
+.ch.pop{animation:pop .3s}@keyframes pop{50%{transform:translateY(-6px) scale(1.15)}}
+.kb{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.kb button{height:46px;border:1px solid var(--line);background:#fff;border-radius:10px;font-weight:700;font-size:17px;color:var(--navy);box-shadow:0 1px 2px rgba(0,0,0,.05);transition:transform .1s,background .15s}
+.kb button:hover:not(:disabled){background:#eaf3f8;transform:translateY(-1px)}
+.kb button:disabled{cursor:default}
+.kb button.good{background:var(--ok);color:#fff;border-color:var(--ok)}
+.kb button.badk{background:#f3d6d2;color:#9b2c22;border-color:#f3d6d2}
+.res{display:none;margin-top:16px;border-radius:14px;padding:14px 16px}
+.res.show{display:block}.res.win{background:#e7f4ee;border:1px solid #b9e0cd}.res.lose{background:#fcedeb;border:1px solid #f1c9c3}
+.res h3{margin:0 0 6px;font-size:18px}.res.win h3{color:var(--ok)}.res.lose h3{color:var(--bad)}
+.res .tr{font-size:14px;margin:6px 0 0;color:#33424f}.res .tr .fa{display:block;text-align:right;direction:rtl;line-height:1.9}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:15px;background:var(--blue);color:#fff;box-shadow:var(--shadow)}
+.btn:hover{background:#00668f}.btn.sec{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.shake{animation:sh .35s}@keyframes sh{25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+.done{text-align:center;padding:30px}
+footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
+@media(max-width:760px){.game{grid-template-columns:1fr}.gallows{max-width:220px;margin:0 auto}.kb{grid-template-columns:repeat(8,1fr);gap:5px}.kb button{height:42px;font-size:15px}.ch{width:22px;height:36px;font-size:20px}.word{gap:10px 12px}.wgroup{gap:4px}.head h1{font-size:20px}}
+</style></head><body>
+<div class="bar"><div class="bar-in"><a class="back" id="back" href="../index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><span>Zurück</span></a>
+<div class="sp"></div><div class="score"><span>Gelöst <b id="sSolved">0</b>/<b id="sTotal">0</b></span><span>Serie <b id="sStreak">0</b></span></div></div></div>
+<main class="wrap">
+  <div class="head"><h1>Galgenmännchen</h1>
+    <select id="day"></select>
+    <div class="seg" id="lang"><button data-l="de">Deutsch</button><button data-l="fa" class="fa">فارسی</button><button data-l="ru">Русский</button></div>
+  </div>
+  <div class="game">
+    <div class="card gallows"><svg viewBox="0 0 220 240" id="svg" aria-label="Galgen"></svg><div class="lives" id="lives"></div></div>
+    <div class="card" id="play">
+      <div class="hint">Gesucht wird der deutsche Fachbegriff</div>
+      <div class="clue" id="clue"></div>
+      <div class="word" id="word"></div>
+      <div class="kb" id="kb"></div>
+      <div class="res" id="res"></div>
+    </div>
+  </div>
+</main>
+<footer>© 2026 Waybuild Akademie, Waybuild UG (haftungsbeschränkt). Alle Rechte vorbehalten. · <a href="https://www.waybuild.de" target="_blank" rel="noopener" style="color:var(--blue)">www.waybuild.de</a></footer>
+<script src="../glossar.js"></script>
+<script>
+const G = (window.GLOSSAR||[]);
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const params = new URLSearchParams(location.search);
+let day = parseInt(params.get("tag")||"0",10)||0;
+let lang = (()=>{ try{ return localStorage.getItem("kba015_lang")||"de"; }catch(e){ return "de"; } })();
+const MAXF = 8;
+const LET = "QWERTZUIOPÜASDFGHJKLÖÄYXCVBNMß".split("");
+let pool=[], cur=null, guessed=new Set(), fails=0, over=false, solved=0, total=0, streak=0;
+
+// Galgen-Teile (8 Fehler)
+const PARTS = [
+  '<path d="M20 228 H130" />', '<path d="M50 228 V20" />', '<path d="M50 20 H150 M50 55 L85 20" />', '<path d="M150 20 V48" />',
+  '<circle cx="150" cy="66" r="18" />', '<path d="M150 84 V145" />', '<path d="M150 100 L122 128 M150 100 L178 128" />', '<path d="M150 145 L126 185 M150 145 L174 185" />'
+];
+function drawGallows(){
+  let s = '<g fill="none" stroke-linecap="round" stroke-linejoin="round">';
+  PARTS.forEach((p,i)=>{ const on = i < fails; s += p.replace("/>", ` stroke="${on?(i>=4?'#c0392b':'#003366'):'#eef2f5'}" stroke-width="${i>=4?6:7}"/>`); });
+  if (fails >= MAXF) s += '<path d="M141 61 l6 6 m0 -6 l-6 6 M153 61 l6 6 m0 -6 l-6 6" stroke="#c0392b" stroke-width="3"/>';
+  $("#svg").innerHTML = s + "</g>";
+  $("#lives").innerHTML = Array.from({length:MAXF},(_,i)=>`<i class="${i<fails?"on":""}"></i>`).join("");
+}
+const up = c => c === "ß" ? "ß" : c.toLocaleUpperCase("de-DE");
+const isLetter = c => /[A-Za-zÄÖÜäöüß]/.test(c);
+function cleanTerm(t){ return t.replace(/\s*\(.*?\)\s*/g," ").replace(/\s+/g," ").trim(); }
+
+function setupDay(){
+  const sel = $("#day");
+  const days = [...new Set(G.map(g=>g.tag))].sort((a,b)=>a-b);
+  sel.innerHTML = `<option value="0">Alle Tage</option>` + days.map(d=>`<option value="${d}">Tag ${d}</option>`).join("");
+  sel.value = String(day);
+  sel.onchange = () => { day = +sel.value; history.replaceState(null,"",`?tag=${day}`); start(); };
+  $("#back").href = day ? `../index.html#tag${String(day).padStart(2,"0")}` : "../index.html";
+}
+function setupLang(){
+  document.querySelectorAll("#lang button").forEach(b=>{ b.classList.toggle("on", b.dataset.l===lang);
+    b.onclick=()=>{ lang=b.dataset.l; try{localStorage.setItem("kba015_lang",lang);}catch(e){} setupLang(); showClue(); }; });
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function start(){
+  pool = shuffle(G.filter(g => !day || g.tag===day).filter(g => cleanTerm(g.de_begriff).replace(/[^A-Za-zÄÖÜäöüß]/g,"").length >= 3));
+  solved=0; total=0; streak=0; updScore(); next();
+}
+function next(){
+  if (!pool.length) { $("#play").innerHTML = `<div class="done"><h2 style="color:var(--navy)">Geschafft</h2><p>Sie haben alle Begriffe ${day?`von Tag ${day}`:""} gespielt. Gelöst ${solved} von ${total}.</p><button class="btn" onclick="location.reload()">Noch einmal</button></div>`; return; }
+  cur = pool.pop(); cur.word = cleanTerm(cur.de_begriff); guessed = new Set(); fails = 0; over = false;
+  $("#res").className = "res"; $("#res").innerHTML = "";
+  drawGallows(); showClue(); drawWord(); drawKb();
+}
+function showClue(){
+  if (!cur) return;
+  const t = lang==="de" ? cur.de : (cur[lang] || cur.de);
+  // Begriff selbst in der Erklärung ausblenden
+  let txt = t; const w = cur.word;
+  w.split(" ").filter(x=>x.length>3).forEach(part=>{ txt = txt.replace(new RegExp(part.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),"▢▢▢"); });
+  const c = $("#clue"); c.textContent = txt; c.dir = lang==="fa" ? "rtl" : "ltr";
+}
+function drawWord(reveal){
+  const groups = cur.word.split(" ");
+  $("#word").innerHTML = groups.map(g=>`<span class="wgroup">${[...g].map(ch=>{
+    if (!isLetter(ch)) return `<span class="ch sym">${esc(ch)}</span>`;
+    const hit = guessed.has(up(ch));
+    return `<span class="ch ${!hit&&reveal?"miss":""}">${hit||reveal?esc(up(ch)):""}</span>`; }).join("")}</span>`).join("");
+}
+function drawKb(){
+  $("#kb").innerHTML = LET.map(l=>`<button data-k="${l}">${l}</button>`).join("");
+  $("#kb").onclick = e => { const b = e.target.closest("button"); if (b && !b.disabled) guess(b.dataset.k); };
+}
+function guess(k){
+  if (over || guessed.has(k)) return;
+  guessed.add(k);
+  const btn = document.querySelector(`#kb button[data-k="${k}"]`);
+  const inWord = [...cur.word].some(ch => isLetter(ch) && up(ch)===k);
+  if (btn){ btn.disabled = true; btn.classList.add(inWord?"good":"badk"); }
+  if (inWord) { drawWord(); document.querySelectorAll("#word .ch").forEach(el=>{ if(el.textContent===k) el.classList.add("pop"); }); }
+  else { fails++; drawGallows(); $("#svg").classList.remove("shake"); void $("#svg").offsetWidth; $("#svg").classList.add("shake"); }
+  const allIn = [...cur.word].every(ch => !isLetter(ch) || guessed.has(up(ch)));
+  if (allIn) end(true); else if (fails >= MAXF) end(false);
+}
+function end(win){
+  over = true; total++; if (win){ solved++; streak++; } else streak = 0; updScore();
+  drawWord(true); document.querySelectorAll("#kb button").forEach(b=>b.disabled=true);
+  const r = $("#res"); r.className = "res show " + (win?"win":"lose");
+  r.innerHTML = `<h3>${win?"Richtig!":"Leider verloren."} Der Begriff ist „${esc(cur.de_begriff)}“</h3>
+    <div>${esc(cur.de)}</div>
+    ${cur.fa||cur.ru?`<div class="tr">${cur.ru_begriff?`<div><b>Русский</b> ${esc(cur.ru_begriff)}</div>`:""}${cur.fa_begriff?`<div class="fa"><b>فارسی</b> ${esc(cur.fa_begriff)}</div>`:""}</div>`:""}
+    <div class="row"><button class="btn" id="nx">Nächstes Wort →</button><a class="btn sec" href="../index.html#glossar${day?"/tag"+String(day).padStart(2,"0"):""}">Zum Glossar</a></div>`;
+  $("#nx").onclick = next; $("#nx").focus();
+}
+function updScore(){ $("#sSolved").textContent = solved; $("#sTotal").textContent = total; $("#sStreak").textContent = streak; }
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey||e.metaKey||e.altKey) return;
+  if (over && e.key==="Enter"){ next(); return; }
+  let k = e.key.length===1 ? up(e.key) : null;
+  if (k && LET.includes(k)) { e.preventDefault(); guess(k); }
+});
+setupDay(); setupLang(); start();
+</script>
+</body></html>

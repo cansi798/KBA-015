@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#06142a"><meta name="robots" content="noindex,nofollow">
+<title>Word-Fighter · KBA-015</title>
+<link rel="icon" href="../assets/logo.png">
+<script>try{if(localStorage.getItem('kba015_ok')!=='1'){location.replace('../index.html');}}catch(e){}</script>
+<style>
+@font-face{font-family:Inter;src:url(../assets/inter-500.woff2) format("woff2");font-weight:500}
+@font-face{font-family:Inter;src:url(../assets/inter-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:Inter;src:url(../assets/inter-800.woff2) format("woff2");font-weight:800}
+@font-face{font-family:Vazirmatn;src:url(../assets/vazir-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Vazirmatn;src:url(../assets/vazir-700.woff2) format("woff2");font-weight:700}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#06142a;color:#fff;font-family:Inter,system-ui,sans-serif;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:10px;padding:8px 14px;padding-top:max(8px,env(safe-area-inset-top));background:rgba(6,20,42,.85);border-bottom:1px solid rgba(255,255,255,.08);z-index:3}
+.back{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;padding:7px 10px;border-radius:10px;color:#cfe6f3}.back:hover{background:rgba(255,255,255,.08)}
+.ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.title{font-weight:800;letter-spacing:.02em;font-size:15px}.title span{color:#4fc3f7}
+.sp{flex:1}
+.stat{font-size:13px;font-weight:700;color:#9fb6c8;display:flex;gap:14px;align-items:center}.stat b{color:#fff;font-size:15px}
+.hearts{letter-spacing:2px;color:#ff5d73;font-size:16px}
+#hud{position:relative;z-index:2;margin:10px auto 0;width:min(900px,calc(100% - 20px));background:rgba(10,32,64,.82);border:1px solid rgba(79,195,247,.35);border-radius:16px;padding:10px 14px;box-shadow:0 8px 30px rgba(0,0,0,.35);display:none}
+#hud .k{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#4fc3f7;display:flex;justify-content:space-between;gap:8px}
+#hud .k .lv{color:#ffd166}
+#hud .clue{font-size:16px;line-height:1.45;margin-top:4px;font-weight:500;color:#eaf6ff}
+#hud .clue[dir=rtl]{font-family:Vazirmatn,Tahoma,sans-serif;font-size:17px;line-height:1.8;text-align:right}
+#stage{position:relative;flex:1;min-height:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;z-index:4;background:radial-gradient(circle at 50% 30%,rgba(0,119,166,.25),rgba(6,20,42,.92) 60%)}
+.panel{width:min(520px,100%);background:rgba(10,30,60,.92);border:1px solid rgba(79,195,247,.35);border-radius:22px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.5);text-align:center;max-height:100%;overflow:auto}
+.panel h1{margin:0;font-size:34px;font-weight:800;letter-spacing:.02em}.panel h1 span{color:#4fc3f7}
+.panel p{color:#bcd3e3;font-size:14.5px;line-height:1.55}
+.ctrls{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;font-size:13px;color:#cfe0ec;margin:12px 0}
+.ctrls div{background:rgba(255,255,255,.06);border-radius:12px;padding:9px 11px}.ctrls b{color:#fff}
+.opts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0 4px}
+select,.seg{background:#0b2547;border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:12px;padding:9px 10px;font:700 14px Inter,sans-serif}
+.seg{display:inline-flex;padding:3px}.seg button{border:0;background:none;color:#9fb6c8;padding:6px 10px;border-radius:9px;font-weight:700;font-size:13px}.seg button.on{background:#4fc3f7;color:#06142a}
+.fa{font-family:Vazirmatn,Tahoma,sans-serif}
+.go{margin-top:14px;width:100%;border:0;border-radius:14px;padding:15px;font-weight:800;font-size:17px;background:linear-gradient(135deg,#4fc3f7,#0077A6);color:#04101f;box-shadow:0 10px 30px rgba(79,195,247,.35)}
+.go:hover{filter:brightness(1.08)}
+.best{font-size:13px;color:#ffd166;margin-top:8px;font-weight:700}
+.miss{text-align:left;margin-top:14px;background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px;max-height:38vh;overflow:auto}
+.miss h3{margin:2px 0 8px;font-size:14px;color:#ffd166}
+.miss div{font-size:13.5px;line-height:1.45;padding:7px 0;border-top:1px solid rgba(255,255,255,.08);color:#d6e6f2}.miss div b{color:#fff}
+.toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:3;padding:9px 14px;border-radius:12px;font-weight:700;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;max-width:92%;text-align:center}
+.toast.show{opacity:1}.toast.ok{background:rgba(29,138,107,.92)}.toast.bad{background:rgba(192,57,43,.92)}
+.pause{position:absolute;right:12px;bottom:12px;z-index:3;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:12px;padding:8px 12px;font-weight:700;font-size:13px;display:none}
+@media(max-width:640px){#hud .clue{font-size:14.5px}.panel h1{font-size:28px}.ctrls{grid-template-columns:1fr}.stat{gap:10px;font-size:12px}.title{display:none}}
+</style></head><body>
+<div id="app">
+  <div class="bar"><a class="back" id="back" href="../index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Zurück</a>
+    <div class="title">WORD-<span>FIGHTER</span></div><div class="sp"></div>
+    <div class="stat"><span>Punkte <b id="score">0</b></span><span class="hearts" id="hearts">♥♥♥</span></div></div>
+  <div id="hud"><div class="k"><span>Treffen Sie den passenden Fachbegriff</span><span class="lv" id="lv">Level 1</span></div><div class="clue" id="clue"></div></div>
+  <div id="stage"><canvas id="cv"></canvas><div class="toast" id="toast"></div><button class="pause" id="pauseBtn">Pause</button>
+    <div class="overlay" id="ov"></div></div>
+</div>
+<script src="../glossar.js"></script>
+<script>
+const G = window.GLOSSAR || [];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const params = new URLSearchParams(location.search);
+let day = parseInt(params.get("tag")||"0",10)||0;
+let lang = (()=>{ try{ return localStorage.getItem("kba015_lang")||"de"; }catch(e){ return "de"; } })();
+const cv = $("#cv"), ctx = cv.getContext("2d");
+let W=0, H=0, DPR=1;
+function resize(){ DPR = Math.min(2, window.devicePixelRatio||1); const r = $("#stage").getBoundingClientRect(); W=r.width; H=r.height; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
+addEventListener("resize", resize);
+
+// Sterne
+let stars = Array.from({length:120},()=>({x:Math.random(),y:Math.random(),z:Math.random()*0.8+0.2}));
+
+const S = { run:false, paused:false, score:0, lives:3, level:1, hits:0, streak:0, ship:{x:0.5}, bullets:[], cards:[], parts:[], target:null, used:[], missed:[], cool:0, fire:false, keys:{}, lockUntil:0, deck:[] };
+const term = g => g.de_begriff.replace(/\s*\(.*?\)\s*/g," ").trim();
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function poolDay(){ return G.filter(g => !day || g.tag===day); }
+
+function clueText(g){
+  let t = lang==="de" ? g.de : (g[lang]||g.de);
+  term(g).split(" ").filter(x=>x.length>3).forEach(p=>{ t = t.replace(new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),"▢▢▢"); });
+  return t;
+}
+function showClue(){ if(!S.target) return; const c=$("#clue"); c.textContent = clueText(S.target); c.dir = lang==="fa"?"rtl":"ltr"; }
+
+function measure(t, size){ ctx.font = `700 ${size}px Inter, system-ui, sans-serif`; return ctx.measureText(t).width; }
+function layoutCard(t){
+  const size = W < 500 ? 14 : 16, pad = 14, maxW = Math.max(130, Math.min(W*0.42, 280));
+  const words = t.split(" "); const lines=[]; let cur="";
+  for (const w of words){ const tryL = cur ? cur+" "+w : w; if (measure(tryL,size) > maxW-2*pad && cur){ lines.push(cur); cur=w; } else cur=tryL; }
+  if (cur) lines.push(cur);
+  const w = Math.min(maxW, Math.max(...lines.map(l=>measure(l,size))) + 2*pad);
+  return { lines, size, w, h: lines.length*(size+5)+18 };
+}
+
+function newRound(){
+  if (!S.deck.length) S.deck = shuffle(poolDay().slice());
+  S.target = S.deck.pop();
+  const others = shuffle(poolDay().filter(g=>g.id!==S.target.id));
+  const extra = others.length < 3 ? shuffle(G.filter(g=>g.id!==S.target.id && !others.includes(g))) : [];
+  const n = W < 500 ? 3 : 4;
+  const opts = shuffle([S.target, ...others.concat(extra).slice(0, n-1)]);
+  const speed = (H/12) * (0.6 + S.level*0.12);   // px pro Sekunde
+  const slot = W / opts.length;
+  S.cards = opts.map((g,i)=>{ const L = layoutCard(term(g)); const x = slot*i + slot/2; return { g, ok: g.id===S.target.id, ...L,
+    x: Math.max(L.w/2+6, Math.min(W-L.w/2-6, x + (Math.random()-0.5)*slot*0.25)), y: -L.h/2 - 10 - Math.random()*70, vy: speed*(0.85+Math.random()*0.3), ph: Math.random()*6, alive:true }; });
+  showClue();
+}
+
+function toast(msg, ok){ const t=$("#toast"); t.textContent=msg; t.className="toast show "+(ok?"ok":"bad"); clearTimeout(toast.h); toast.h=setTimeout(()=>t.className="toast",1400); }
+function burst(x,y,col,n=26){ for(let i=0;i<n;i++){ const a=Math.random()*Math.PI*2, v=60+Math.random()*220; S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0.7+Math.random()*0.4,col}); } }
+function hud(){ $("#score").textContent=S.score; $("#hearts").textContent="♥".repeat(S.lives)+"♡".repeat(Math.max(0,3-S.lives)); $("#lv").textContent=`Level ${S.level}`; }
+
+function hit(card){
+  card.alive=false;
+  if (card.ok){
+    S.streak++; S.hits++; const pts = 100*S.level + Math.min(5,S.streak-1)*20; S.score += pts;
+    burst(card.x, card.y, "#5ee6a8", 40); toast(`Richtig! +${pts}`, true);
+    if (S.hits % 5 === 0){ S.level++; setTimeout(()=>toast(`Level ${S.level}`, true), 700); }
+    S.cards.forEach(c=>{ if(c.alive){ c.alive=false; burst(c.x,c.y,"rgba(160,190,220,.8)",10);} });
+    S.lockUntil = performance.now()+700; setTimeout(newRound, 700);
+  } else {
+    S.streak=0; loseLife(`Falsch. „${term(card.g)}“ passt nicht.`); burst(card.x, card.y, "#ff5d73", 30);
+  }
+  hud();
+}
+function loseLife(msg){
+  S.lives--; toast(msg, false); if (!S.missed.includes(S.target)) S.missed.push(S.target);
+  flash = 0.35; hud();
+  if (S.lives<=0) setTimeout(gameOver, 500);
+}
+let flash = 0;
+
+function fireBullet(){ const sx=S.ship.x*W, sy=H-54; S.bullets.push({x:sx,y:sy-18}); }
+
+let last = 0;
+function loop(t){
+  const dt = Math.min(0.05, (t-last)/1000 || 0); last = t;
+  if (S.run && !S.paused) update(dt, t);
+  draw(t);
+  requestAnimationFrame(loop);
+}
+function update(dt, t){
+  const k = S.keys, sp = 1.1;
+  if (k.ArrowLeft||k.a||k.A) S.ship.x -= sp*dt; if (k.ArrowRight||k.d||k.D) S.ship.x += sp*dt;
+  S.ship.x = Math.max(0.04, Math.min(0.96, S.ship.x));
+  S.cool -= dt; if ((S.fire||k[" "]) && S.cool<=0 && S.lives>0){ fireBullet(); S.cool = 0.22; }
+  S.bullets.forEach(b=> b.y -= 720*dt); S.bullets = S.bullets.filter(b=>b.y>-20);
+  for (const c of S.cards){ if(!c.alive) continue; c.y += c.vy*dt; c.ph += dt*2;
+    for (const b of S.bullets){ if (!b.dead && Math.abs(b.x-(c.x+Math.sin(c.ph)*10))<c.w/2 && Math.abs(b.y-c.y)<c.h/2){ b.dead=true; if (performance.now()>S.lockUntil) hit(c); break; } }
+    if (c.y - c.h/2 > H-70 && c.alive){ c.alive=false; if (c.ok && performance.now()>S.lockUntil){ loseLife(`Verpasst. Richtig wäre „${term(c.g)}“.`); S.streak=0; S.cards.forEach(x=>x.alive=false); S.lockUntil=performance.now()+900; if (S.lives>0) setTimeout(newRound, 900); } }
+  }
+  S.bullets = S.bullets.filter(b=>!b.dead);
+  if (S.cards.length && S.cards.every(c=>!c.alive) && performance.now()>S.lockUntil && S.lives>0){ S.lockUntil = performance.now()+500; setTimeout(newRound, 300); }
+  S.parts.forEach(p=>{ p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=200*dt; p.life-=dt; }); S.parts = S.parts.filter(p=>p.life>0);
+  flash = Math.max(0, flash-dt);
+}
+function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function draw(t){
+  ctx.clearRect(0,0,W,H);
+  const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#06142a"); g.addColorStop(1,"#0b2a50"); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  for (const s of stars){ s.y += (S.run&&!S.paused?0.0009:0.0003)*s.z*3; if (s.y>1) { s.y=0; s.x=Math.random(); }
+    ctx.fillStyle=`rgba(200,230,255,${0.25+s.z*0.6})`; ctx.fillRect(s.x*W, s.y*H, s.z*2.2, s.z*2.2); }
+  // Karten
+  for (const c of S.cards){ if(!c.alive) continue; const x = c.x + Math.sin(c.ph)*10, y=c.y;
+    ctx.save(); ctx.shadowColor="rgba(79,195,247,.45)"; ctx.shadowBlur=16;
+    rr(x-c.w/2, y-c.h/2, c.w, c.h, 12); ctx.fillStyle="rgba(14,52,96,.95)"; ctx.fill(); ctx.restore();
+    rr(x-c.w/2, y-c.h/2, c.w, c.h, 12); ctx.strokeStyle="rgba(79,195,247,.85)"; ctx.lineWidth=1.6; ctx.stroke();
+    ctx.fillStyle="#fff"; ctx.font=`700 ${c.size}px Inter, system-ui, sans-serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
+    c.lines.forEach((l,i)=> ctx.fillText(l, x, y - (c.lines.length-1)*(c.size+5)/2 + i*(c.size+5)));
+  }
+  // Schüsse
+  ctx.fillStyle="#ffd166"; for (const b of S.bullets){ rr(b.x-2.5,b.y-9,5,16,2.5); ctx.fill(); }
+  // Partikel
+  for (const p of S.parts){ ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle=p.col; ctx.fillRect(p.x,p.y,3.5,3.5); } ctx.globalAlpha=1;
+  // Schiff
+  if (S.run){ const sx=S.ship.x*W, sy=H-54;
+    ctx.save(); ctx.translate(sx,sy);
+    const fl = 8+Math.sin(t/60)*4; ctx.fillStyle="rgba(255,150,60,.85)"; ctx.beginPath(); ctx.moveTo(-7,18); ctx.lineTo(0,18+fl+8); ctx.lineTo(7,18); ctx.fill();
+    ctx.shadowColor="#4fc3f7"; ctx.shadowBlur=18; ctx.fillStyle="#e8f6ff";
+    ctx.beginPath(); ctx.moveTo(0,-24); ctx.lineTo(20,18); ctx.lineTo(6,12); ctx.lineTo(0,20); ctx.lineTo(-6,12); ctx.lineTo(-20,18); ctx.closePath(); ctx.fill();
+    ctx.shadowBlur=0; ctx.fillStyle="#0077A6"; ctx.beginPath(); ctx.ellipse(0,-2,5,9,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+    // Bodenlinie
+    ctx.strokeStyle="rgba(255,93,115,.35)"; ctx.setLineDash([6,8]); ctx.beginPath(); ctx.moveTo(0,H-70); ctx.lineTo(W,H-70); ctx.stroke(); ctx.setLineDash([]);
+  }
+  if (flash>0){ ctx.fillStyle=`rgba(255,60,80,${flash})`; ctx.fillRect(0,0,W,H); }
+}
+
+// Steuerung
+addEventListener("keydown", e=>{ if (["ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault(); S.keys[e.key]=true; if (e.key==="p"||e.key==="Escape") togglePause(); if (e.key==="Enter" && !S.run) startGame(); });
+addEventListener("keyup", e=>{ S.keys[e.key]=false; });
+function ptr(e){ const r=cv.getBoundingClientRect(); S.ship.x = Math.max(0.04, Math.min(0.96, (e.clientX-r.left)/r.width)); }
+cv.addEventListener("pointerdown", e=>{ cv.setPointerCapture(e.pointerId); ptr(e); S.fire=true; });
+cv.addEventListener("pointermove", e=>{ if (e.pointerType==="mouse" || S.fire) ptr(e); });
+cv.addEventListener("pointerup", ()=>{ S.fire=false; }); cv.addEventListener("pointercancel", ()=>{ S.fire=false; });
+addEventListener("blur", ()=>{ if (S.run) setPause(true); });
+function setPause(p){ S.paused=p; $("#pauseBtn").textContent = p ? "Weiter" : "Pause"; if (p) toast("Pause. Tippen Sie auf Weiter.", true); }
+function togglePause(){ if (S.run) setPause(!S.paused); }
+$("#pauseBtn").onclick = togglePause;
+
+function best(){ try{ return +localStorage.getItem("kba015_wf_best_"+day)||0; }catch(e){ return 0; } }
+function setBest(v){ try{ localStorage.setItem("kba015_wf_best_"+day, v); }catch(e){} }
+
+function langSeg(){ return `<div class="seg" id="lseg">${[["de","Deutsch"],["fa","فارسی"],["ru","Русский"]].map(([k,l])=>`<button data-l="${k}" class="${k===lang?"on":""} ${k==="fa"?"fa":""}">${l}</button>`).join("")}</div>`; }
+function bindOpts(){
+  const sel=$("#dsel"); if (sel){ sel.value=String(day); sel.onchange=()=>{ day=+sel.value; history.replaceState(null,"",`?tag=${day}`); setBack(); const bv=$("#bestv"); if(bv) bv.textContent=best(); }; }
+  document.querySelectorAll("#lseg button").forEach(b=>b.onclick=()=>{ lang=b.dataset.l; try{localStorage.setItem("kba015_lang",lang);}catch(e){} document.querySelectorAll("#lseg button").forEach(x=>x.classList.toggle("on",x===b)); showClue(); });
+}
+function dayOpts(){ const ds=[...new Set(G.map(g=>g.tag))].sort((a,b)=>a-b); return `<select id="dsel"><option value="0">Alle Tage</option>${ds.map(d=>`<option value="${d}">Tag ${d}</option>`).join("")}</select>`; }
+function setBack(){ $("#back").href = day ? `../index.html#tag${String(day).padStart(2,"0")}` : "../index.html"; }
+
+function startScreen(){
+  $("#ov").style.display="flex";
+  $("#ov").innerHTML = `<div class="panel"><h1>WORD-<span>FIGHTER</span></h1>
+    <p>Oben steht eine Erklärung. Fliegen Sie unter den passenden deutschen Fachbegriff und schießen Sie ihn ab. Falsche Begriffe und verpasste Begriffe kosten ein Leben.</p>
+    <div class="ctrls"><div><b>PC</b><br>Pfeiltasten oder Maus bewegen, Leertaste oder Maustaste schießt</div><div><b>Handy</b><br>Finger auf den Bildschirm legen und ziehen, solange der Finger liegt, wird geschossen</div></div>
+    <div class="opts">${dayOpts()}${langSeg()}</div>
+    <button class="go" id="goBtn">Spiel starten</button><div class="best">Bestwert <span id="bestv">${best()}</span> Punkte</div></div>`;
+  bindOpts(); $("#goBtn").onclick = startGame;
+}
+function startGame(){
+  Object.assign(S, {run:true, paused:false, score:0, lives:3, level:1, hits:0, streak:0, bullets:[], cards:[], parts:[], missed:[], deck:[], lockUntil:0});
+  S.ship.x=0.5; $("#ov").style.display="none"; $("#hud").style.display="block"; $("#pauseBtn").style.display="block";
+  requestAnimationFrame(()=>{ resize(); hud(); newRound(); });
+}
+function gameOver(){
+  S.run=false; $("#hud").style.display="none"; $("#pauseBtn").style.display="none";
+  const b = best(); const rec = S.score > b; if (rec) setBest(S.score);
+  const miss = S.missed.map(g=>`<div><b>${esc(g.de_begriff)}</b><br>${esc(g.de)}</div>`).join("");
+  $("#ov").style.display="flex";
+  $("#ov").innerHTML = `<div class="panel"><h1>Game <span>Over</span></h1>
+    <p style="font-size:18px;color:#fff;margin:10px 0 2px"><b>${S.score}</b> Punkte · ${S.hits} Treffer · Level ${S.level}</p>
+    <div class="best">${rec?"Neuer Bestwert!":`Bestwert ${Math.max(b,S.score)} Punkte`}</div>
+    ${miss?`<div class="miss"><h3>Diese Begriffe sollten Sie wiederholen</h3>${miss}</div>`:""}
+    <div class="opts">${dayOpts()}${langSeg()}</div>
+    <button class="go" id="goBtn">Noch einmal</button>
+    <a class="go" style="display:block;background:rgba(255,255,255,.1);color:#fff;box-shadow:none;margin-top:8px" href="../index.html#glossar${day?"/tag"+String(day).padStart(2,"0"):""}">Zum Glossar</a></div>`;
+  bindOpts(); $("#goBtn").onclick = startGame;
+}
+resize(); setBack(); startScreen(); requestAnimationFrame(loop);
+</script>
+</body></html>
