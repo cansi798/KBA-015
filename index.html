@@ -11,6 +11,9 @@
 @font-face{font-family:Inter;src:url(assets/inter-600.woff2) format("woff2");font-weight:600;font-display:swap}
 @font-face{font-family:Inter;src:url(assets/inter-700.woff2) format("woff2");font-weight:700;font-display:swap}
 @font-face{font-family:Inter;src:url(assets/inter-800.woff2) format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(assets/vazir-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(assets/vazir-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(assets/vazir-700.woff2) format("woff2");font-weight:700;font-display:swap}
 :root{
   --blue:#0077A6;--navy:#003366;--ink:#14212e;--muted:#5b6b7a;--line:#e3e9ef;--bg:#f4f7fa;--card:#fff;
   --t1:#0077A6;--t2:#1d8a6b;--t3:#d0731c;--t4:#c0394f;--extra:#7048b0;--extra-bg:#f4effb;
@@ -163,6 +166,35 @@ footer a{color:var(--blue)}
 @keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 
+
+/* Glossar */
+.gtools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px;box-shadow:var(--shadow)}
+.seg button{border:0;background:none;padding:9px 16px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--navy);color:#fff}
+.seg button .fa{font-family:Vazirmatn,Tahoma,sans-serif}
+.gsearch{flex:1;min-width:220px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:0 14px;box-shadow:var(--shadow)}
+.gsearch input{flex:1;border:0;outline:0;font:500 15px Inter,system-ui,sans-serif;padding:12px 0;background:none;color:var(--ink)}
+.gsearch .ico{width:18px;height:18px;color:var(--muted)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-top:12px;scrollbar-width:thin}
+.chips button{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}
+.chips button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.gcount{font-size:13px;color:var(--muted);margin:8px 2px 10px}
+.glist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.gcard{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.gcard .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.gcard .de{font-size:16.5px;font-weight:700;color:var(--navy)}
+.gcard .tg{flex:none;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:#e6f2f8;color:var(--blue);cursor:pointer}
+.gcard .tr{font-size:15.5px;font-weight:700;color:var(--blue);margin-top:4px}
+.gcard .ex{font-size:14.5px;line-height:1.6;margin-top:6px;color:#26333f}
+.gcard [dir=rtl]{font-family:Vazirmatn,Tahoma,"Segoe UI",sans-serif;text-align:right;line-height:1.9}
+.gcard [dir=rtl].ex{font-size:15.5px}
+.gcard details{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.gcard summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted)}
+.gcard details p{margin:6px 0 0;font-size:14px;color:#3b4a58}
+.empty{background:#fff;border-radius:var(--r);padding:26px;text-align:center;color:var(--muted);box-shadow:var(--shadow)}
+@media (max-width:640px){.glist{grid-template-columns:1fr}.seg{width:100%}.seg button{flex:1;padding:9px 6px}.gsearch{min-width:0;width:100%}}
+
 /* Hover und Fokus */
 .tile .ic,.dayc .num,.extra .ic,.today .big{transition:transform .25s cubic-bezier(.2,.8,.2,1),background .2s,color .2s,box-shadow .2s}
 .tile .foot .ico,.dayc .chev,.extra .go,.today .go .ico,.pager .ico{transition:transform .2s ease}
@@ -251,6 +283,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #66b5
 </div>
 
 <script src="media.js"></script>
+<script src="glossar.js"></script>
 <script>
 const DAYS = [{"n": 1, "date": "16.11.2026", "weekday": "Montag", "title": "Das duale Ausbildungssystem", "teil": 1, "lk": "1.1", "folien": 22, "seiten": 18, "ah_n": 13, "ah_min": 75, "merksatz": "Im dualen System bilden Betrieb und Berufsschule gemeinsam aus. Der Ausbildende schließt den Vertrag, der Ausbilder bildet aus, und die IHK überwacht und prüft."}, {"n": 2, "date": "17.11.2026", "weekday": "Dienstag", "title": "Der Berufsausbildungsvertrag", "teil": 1, "lk": "1.1", "folien": 21, "seiten": 18, "ah_n": 13, "ah_min": 76, "merksatz": "Der Ausbildungsvertrag steht seit 01.08.2024 in Textform, die Probezeit dauert ein bis vier Monate, und jede Kündigung muss schriftlich sein."}, {"n": 3, "date": "18.11.2026", "weekday": "Mittwoch", "title": "Jugend- und Auszubildendenvertretung und Jugendarbeitsschutz", "teil": 1, "lk": "1.2, 1.3", "folien": 22, "seiten": 19, "ah_n": 13, "ah_min": 78, "merksatz": "Die JAV ist die Stimme der jungen Beschäftigten und Auszubildenden im Betrieb und handelt über den Betriebsrat. Das Jugendarbeitsschutzgesetz schützt alle unter 18 Jahren mit festen Grenzen für Arbeitszeit, Pausen, Freizeit, Urlaub und gefährliche Arbeiten."}, {"n": 4, "date": "19.11.2026", "weekday": "Donnerstag", "title": "Fort- und Weiterbildung und Wiederholung Teil 1", "teil": 1, "lk": "1.4, 1.1 bis 1.3", "folien": 22, "seiten": 17, "ah_n": 13, "ah_min": 78, "merksatz": "Wer weiterlernt, bleibt gefragt. Anpassung hält Sie auf dem neuesten Stand, Aufstieg bringt Sie eine Stufe höher, Umschulung führt Sie in einen neuen Beruf."}, {"n": 5, "date": "20.11.2026", "weekday": "Freitag", "title": "Betriebstypen und betriebliche Leistungsfaktoren", "teil": 2, "lk": "2.1, 2.2", "folien": 22, "seiten": 17, "ah_n": 13, "ah_min": 76, "merksatz": "Ein Betrieb kombiniert ausführende Arbeit, Betriebsmittel und Werkstoffe, der dispositive Faktor plant, leitet, organisiert und kontrolliert. Die Nordholz Büromöbel GmbH ist ein erwerbswirtschaftlicher Industriebetrieb im sekundären Sektor."}, {"n": 6, "date": "23.11.2026", "weekday": "Montag", "title": "Der Betrieb in der Wirtschaft, Leitbild, Ziele und Nachhaltigkeit", "teil": 2, "lk": "2.3, 2.4", "folien": 22, "seiten": 19, "ah_n": 13, "ah_min": 76, "merksatz": "Kein Betrieb arbeitet allein. Die Nordholz Büromöbel GmbH ist ein Glied in der Wertschöpfungskette und tauscht im Wirtschaftskreislauf Güter und Geld mit Haushalten, Staat, Banken und Ausland. Ihr Leitbild gibt die Richtung vor, ihre Ziele machen den Weg messbar, und Nachhaltigkeit verbindet Wirtschaft, Umwelt und Menschen."}, {"n": 7, "date": "24.11.2026", "weekday": "Dienstag", "title": "Eigene Stellung im Betrieb, Organigramm und Geschäftsprozesse", "teil": 3, "lk": "3", "folien": 21, "seiten": 18, "ah_n": 13, "ah_min": 78, "merksatz": "Die Aufbauorganisation zeigt, wer im Betrieb welche Aufgabe hat und wem er unterstellt ist, die Ablauforganisation zeigt, wie die Arbeit Schritt für Schritt über alle Abteilungen hinweg läuft."}, {"n": 8, "date": "25.11.2026", "weekday": "Mittwoch", "title": "Befugnisse, Weisungssysteme und Vollmachten", "teil": 3, "lk": "3", "folien": 21, "seiten": 19, "ah_n": 13, "ah_min": 79, "merksatz": "Prokura erlaubt fast alles, was irgendein Handelsgewerbe mit sich bringt, wird ins Handelsregister eingetragen und mit ppa. gezeichnet. Handlungsvollmacht erlaubt nur das Gewöhnliche, braucht für Grundstücke, Wechsel, Darlehen und Prozesse eine Sonderbefugnis und wird mit i. V. gezeichnet."}, {"n": 9, "date": "26.11.2026", "weekday": "Donnerstag", "title": "Grundlagen der Präsentation und den Ausbildungsbetrieb präsentieren", "teil": 3, "lk": "4", "folien": 22, "seiten": 11, "ah_n": 13, "ah_min": 77, "merksatz": "Eine gute Präsentation hat ein klares Ziel, passt zur Zielgruppe, hat Einleitung, Hauptteil und Schluss, nutzt einfache Folien und wird frei mit Blickkontakt vorgetragen."}, {"n": 10, "date": "27.11.2026", "weekday": "Freitag", "title": "Gesamtwiederholung und Lernerfolgskontrolle", "teil": 4, "lk": "5", "folien": 21, "seiten": 16, "ah_n": 13, "ah_min": 78, "merksatz": "Lesen Sie jede Aufgabe zweimal, achten Sie auf das Aufgabenwort, nennen Sie die Rechtsgrundlage und rechnen Sie immer mit den Zahlen aus dem Fall."}];
 const TEILE = {"1": "Teil 1 Ausbildung und Recht", "2": "Teil 2 Der Betrieb", "3": "Teil 3 Eigene Stellung im Betrieb und Präsentation", "4": "Teil 4 Klausur"};
@@ -279,7 +312,9 @@ const P = {
   cal:'<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   user:'<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>',
   out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l4-4-4-4M14 12H4"/>',
-  layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>'
+  layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+  glos:'<path d="M4 4.5h11a3 3 0 0 1 3 3V20H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h11"/><path d="m8 7 1.8 4.5L11.6 7M8.6 10h2.4"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>'
 };
 const I = (k, cls="ico") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${P[k]}</svg>`;
 
@@ -345,6 +380,7 @@ function dashboard(){
   h += `<section class="sec fade"><div class="sec-h"><span class="dot" style="background:var(--navy)"></span><h2>Für den ganzen Kurs</h2></div><div class="tiles">`+
     tile({href:"quiz-trainer.html", ic:"target", t:"Quiz-Trainer", s:"Alle Fragen aller Tage. Üben oder Probeklausur mit 30 Fragen.", c:"var(--navy)", foot:"Trainieren"})+
     tile({href:"gesamtskript.pdf", ic:"lib", t:"Gesamtskript", s:"Alle Skripte mit Lösungen und Glossar als PDF.", c:"var(--navy)", foot:"PDF öffnen"})+
+    tile({href:"#glossar", ic:"glos", t:"Glossar", s:`${(window.GLOSSAR||[]).length} Fachbegriffe einfach erklärt. Deutsch, <span style="font-family:Vazirmatn,Tahoma,sans-serif">فارسی</span>, Русский`, c:"#1d8a6b", foot:"Begriffe ansehen"})+
   `</div></section>`;
   return h;
 }
@@ -362,6 +398,7 @@ function dayView(n){
     tile({href:p+"praesentation.pdf", ic:"slides", t:"Präsentation", s:`${d.folien} Folien als PDF`, c, foot:"PDF öffnen"})+
     tile({href:p+"skript.pdf", ic:"book", t:"Skript", s:`${d.seiten} Seiten mit Übungen und Lösungen`, c, foot:"PDF öffnen"})+
     tile({href:p+"quiz.html", ic:"check", t:"Quiz des Tages", s:"60 Fragen mit Auswertung und Erklärungen", cls:"primary", foot:"Quiz starten"})+
+    tile({href:`#glossar/tag${pad(n)}`, ic:"glos", t:"Fachbegriffe des Tages", s:`${(window.GLOSSAR||[]).filter(g=>g.tag===n).length} Begriffe einfach erklärt. Deutsch, <span style="font-family:Vazirmatn,Tahoma,sans-serif">فارسی</span>, Русский`, c:"#1d8a6b", foot:"Begriffe ansehen"})+
   `</div></section>`;
   h += `<section class="sec fade"><div class="sec-h"><span class="dot" style="background:${c}"></span><h2>Video und Podcast</h2></div><div class="tiles">`+
     (vid ? tile({href:`#tag${pad(n)}/video`, ic:"play", t:"Video", s:media(n,"untertitel")?"Erklärvideo zum Tag, mit Untertiteln":"Erklärvideo zum Tag", c:"#c0394f", foot:"Ansehen"})
@@ -405,6 +442,42 @@ function mediaView(n, kind){
     <div class="pager"><a href="#tag${pad(n)}">${I("left")}Zurück zu Tag ${n}</a><span></span></div>`;
 }
 
+
+const LANGS = [["de","Deutsch"],["fa","فارسی"],["ru","Русский"]];
+let gLang = (()=>{ try{ return localStorage.getItem("kba015_lang")||"de"; }catch(e){ return "de"; } })();
+let gQuery = "";
+function glossarView(dayFilter){
+  const G = window.GLOSSAR || [];
+  const chips = `<button data-d="0" class="${!dayFilter?"on":""}">Alle Tage</button>` + DAYS.map(d=>`<button data-d="${d.n}" class="${dayFilter===d.n?"on":""}">Tag ${d.n}</button>`).join("");
+  return `<section class="dhero fade" style="--c:#1d8a6b"><div class="row"><span class="teil">Glossar</span><span class="date">${dayFilter?`Tag ${dayFilter} · ${esc(DAYS[dayFilter-1].title)}`:"Alle Fachbegriffe des Kurses"}</span></div>
+    <h1>Fachbegriffe einfach erklärt</h1><div class="lk">Wählen Sie Ihre Sprache. Der deutsche Fachbegriff steht immer dabei, denn so heißt er in der Prüfung.</div></section>
+    <div class="gtools"><div class="seg" id="gseg">${LANGS.map(([k,l])=>`<button data-l="${k}" class="${gLang===k?"on":""}"><span class="${k==="fa"?"fa":""}">${l}</span></button>`).join("")}</div>
+    <label class="gsearch">${I("search")}<input id="gq" type="search" placeholder="Begriff suchen" value="${esc(gQuery)}"></label></div>
+    <div class="chips" id="gchips">${chips}</div><div class="gcount" id="gcount"></div><div class="glist" id="glist"></div>
+    ${dayFilter?`<div class="pager"><a href="#tag${pad(dayFilter)}">${I("left")}Zurück zu Tag ${dayFilter}</a><span></span></div>`:""}`;
+}
+function glossarBind(dayFilter){
+  const G = (window.GLOSSAR || []).slice().sort((a,b)=>a.de_begriff.localeCompare(b.de_begriff,"de"));
+  const norm = t => String(t||"").toLowerCase();
+  function draw(){
+    const q = norm(gQuery.trim());
+    const L = G.filter(g => (!dayFilter || g.tag===dayFilter) && (!q || [g.de_begriff,g.de,g.fa_begriff,g.fa,g.ru_begriff,g.ru].some(x=>norm(x).includes(q))));
+    $("#gcount").textContent = `${L.length} ${L.length===1?"Begriff":"Begriffe"}`;
+    $("#glist").innerHTML = L.length ? L.map(g=>{
+      const rtl = gLang==="fa" ? ' dir="rtl" lang="fa"' : gLang==="ru" ? ' lang="ru"' : "";
+      const tr = gLang==="de" ? "" : `<div class="tr"${rtl}>${esc(g[gLang+"_begriff"]||"")}</div>`;
+      const ex = gLang==="de" ? g.de : (g[gLang]||g.de);
+      const deBox = gLang==="de" ? "" : `<details><summary>Erklärung auf Deutsch</summary><p>${esc(g.de)}</p></details>`;
+      return `<article class="gcard"><div class="top"><div class="de" lang="de">${esc(g.de_begriff)}</div><a class="tg" href="#tag${pad(g.tag)}">Tag ${g.tag}</a></div>${tr}<div class="ex"${rtl}>${esc(ex)}</div>${deBox}</article>`;
+    }).join("") : `<div class="empty">Kein Begriff gefunden.</div>`;
+  }
+  $("#gseg").onclick = e => { const b = e.target.closest("button"); if(!b) return; gLang = b.dataset.l; try{ localStorage.setItem("kba015_lang", gLang); }catch(x){}
+    document.querySelectorAll("#gseg button").forEach(x=>x.classList.toggle("on", x===b)); draw(); };
+  $("#gq").oninput = e => { gQuery = e.target.value; draw(); };
+  $("#gchips").onclick = e => { const b = e.target.closest("button"); if(!b) return; const d = +b.dataset.d; location.hash = d ? `#glossar/tag${pad(d)}` : "#glossar"; };
+  draw();
+}
+
 function pager(n){
   const prev = n>1 ? `<a href="#tag${pad(n-1)}">${I("left")}Tag ${n-1}</a>` : "<span></span>";
   const next = n<DAYS.length ? `<a href="#tag${pad(n+1)}">Tag ${n+1}${I("right")}</a>` : "<span></span>";
@@ -413,8 +486,10 @@ function pager(n){
 
 function route(){
   const m = location.hash.match(/^#tag(\d{2})(?:\/(zusatz|video|podcast))?$/);
-  let h, back = null;
-  if (!m) h = dashboard();
+  const gm = location.hash.match(/^#glossar(?:\/tag(\d{2}))?$/);
+  let h, back = null, gday = null;
+  if (gm) { gday = gm[1] ? parseInt(gm[1],10) : 0; h = glossarView(gday); back = gday ? {href:`#tag${pad(gday)}`, label:`Tag ${gday}`} : {href:"#", label:"Übersicht"}; }
+  else if (!m) h = dashboard();
   else {
     const n = parseInt(m[1],10);
     if (!m[2]) { h = dayView(n); back = {href:"#", label:"Übersicht"}; }
@@ -422,7 +497,7 @@ function route(){
     else { h = mediaView(n, m[2]); back = {href:`#tag${pad(n)}`, label:`Tag ${n}`}; }
   }
   $("#bar").innerHTML = bar(back);
-  $("#view").innerHTML = h; window.scrollTo(0,0);
+  $("#view").innerHTML = h; if (gm) glossarBind(gday); window.scrollTo(0,0);
 }
 function start(){ $("#gate").hidden = true; $("#app").hidden = false; route(); }
 window.addEventListener("hashchange", () => { if (ok()) route(); });
