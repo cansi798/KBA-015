@@ -15,8 +15,8 @@ window.MEDIA = {
     "podcast": ""
   },
   "tag03": {
-    "video": "",
-    "podcast": ""
+    "video": "media/tag03/video.mp4",
+    "podcast": "media/tag03/podcast.m4a"
   },
   "tag04": {
     "video": "",
