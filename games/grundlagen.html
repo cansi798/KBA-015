@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#003366"><meta name="robots" content="noindex,nofollow">
+<title>Kaufmännische Grundlagen · KBA-015</title>
+<link rel="icon" href="../assets/logo.png">
+<script>try{if(localStorage.getItem('kba015_ok')!=='1'){location.replace('../index.html');}}catch(e){}</script>
+<style>
+@font-face{font-family:Inter;src:url(../assets/inter-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Inter;src:url(../assets/inter-600.woff2) format("woff2");font-weight:600}
+@font-face{font-family:Inter;src:url(../assets/inter-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:Inter;src:url(../assets/inter-800.woff2) format("woff2");font-weight:800}
+:root{--blue:#0077A6;--navy:#003366;--ink:#14212e;--muted:#5b6b7a;--line:#e3e9ef;--bg:#f4f7fa;--ok:#1d8a6b;--bad:#c0392b;--gold:#e0a100;--r:18px;--shadow:0 1px 2px rgba(16,40,64,.06),0 6px 20px rgba(16,40,64,.06);--c:var(--blue)}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.55}
+a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
+.bar{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 18px}
+.back{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--navy);padding:8px 10px;border-radius:12px;background:none;border:0}.back:hover{background:var(--bg)}
+.ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sp{flex:1}.xp{font-size:13px;font-weight:800;color:var(--navy);background:#fff7dc;border:1px solid #f3df9c;padding:6px 10px;border-radius:999px;white-space:nowrap}
+.wrap{max-width:900px;margin:0 auto;padding:18px 18px 60px}
+h1{margin:6px 0 4px;font-size:28px;line-height:1.2;font-weight:800;color:var(--navy)}
+.lead{color:var(--muted);margin:0 0 18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.tracks{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.track{border-top:5px solid var(--c);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.track:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(16,40,64,.08),0 14px 30px rgba(16,40,64,.12)}
+.track h2{margin:4px 0 6px;font-size:21px;color:var(--navy)}.track p{margin:0 0 14px;color:var(--muted);font-size:15px}
+.emo{font-size:34px;line-height:1}
+.pbar{height:10px;background:#e8eef3;border-radius:99px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--c);border-radius:99px;transition:width .5s}
+.pl{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted);margin-top:6px}
+.path{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.lv{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);cursor:pointer;transition:transform .12s,border-color .12s;text-align:left;width:100%}
+.lv:hover:not(.locked){transform:translateX(4px);border-color:var(--c)}
+.lv .n{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;background:var(--c);color:#fff;flex:none}
+.lv.locked{opacity:.55;cursor:not-allowed}.lv.locked .n{background:#c9d3dc}
+.lv.done .n{background:var(--ok)}
+.lv .tx{flex:1}.lv .tx b{display:block;color:var(--navy);font-size:16px}.lv .tx small{color:var(--muted);font-size:13px}
+.stars{font-size:18px;letter-spacing:2px;color:var(--gold);white-space:nowrap}.stars .off{color:#d6dde4}
+.badge{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff);padding:4px 10px;border-radius:99px}
+.learn h3{margin:18px 0 6px;color:var(--navy);font-size:18px}
+.learn p{margin:8px 0}
+.box{border-radius:14px;padding:14px 16px;margin:12px 0;border:2px solid}
+.box.merke{border-color:#0077A6;background:#eef7fb}.box.tipp{border-color:#1d8a6b;background:#eef8f4}.box.acht{border-color:#d0731c;background:#fdf4ec}.box.bild{border-color:#7048b0;background:#f5f1fb}
+.box .h{font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.box.merke .h{color:#0077A6}.box.tipp .h{color:#1d8a6b}.box.acht .h{color:#b5600f}.box.bild .h{color:#7048b0}
+.f{font-weight:700;color:var(--navy);background:#fff;border:1px dashed #9fb6c8;border-radius:10px;padding:8px 12px;display:inline-block;margin:4px 0}
+.steps{counter-reset:s;list-style:none;padding:0;margin:10px 0}
+.steps li{counter-increment:s;position:relative;padding:10px 12px 10px 50px;margin:8px 0;background:#f7fafc;border-radius:12px;border:1px solid var(--line);animation:pop .35s ease}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:9px;width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:14px;padding:13px 20px;font-weight:800;font-size:16px;background:var(--c);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--c) 30%,transparent);transition:transform .1s,filter .1s}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}.btn:active{transform:none}
+.btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line);box-shadow:var(--shadow)}
+.btn:disabled{opacity:.5;cursor:default;transform:none}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.dots{display:flex;gap:8px;margin-bottom:14px}.dots i{width:14px;height:14px;border-radius:50%;background:#dfe6ec}.dots i.cur{background:var(--c);transform:scale(1.2)}.dots i.ok{background:var(--ok)}.dots i.no{background:var(--bad)}
+.q{font-size:19px;line-height:1.55;font-weight:600;color:#1b2b3a;margin:4px 0 14px}
+.ans{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ans input{font:700 22px Inter,sans-serif;width:190px;max-width:100%;padding:12px 14px;border:2px solid #c9d5df;border-radius:14px;color:var(--navy);outline:none}
+.ans input:focus{border-color:var(--c)}.ans .u{font-weight:800;font-size:20px;color:var(--muted)}
+.ch{display:grid;gap:10px}.ch button{text-align:left;padding:14px 16px;border-radius:14px;border:2px solid #d6e0e8;background:#fff;font-weight:600;font-size:17px;color:#1b2b3a;transition:border-color .1s,background .1s}
+.ch button:hover:not(:disabled){border-color:var(--c);background:#f6fafd}
+.ch button.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,#fff)}
+.ch button.good{border-color:var(--ok);background:#e9f7f1}.ch button.wrong{border-color:var(--bad);background:#fbecea}
+.fb{border-radius:14px;padding:14px 16px;margin-top:14px;animation:pop .3s ease}
+.fb.ok{background:#e9f7f1;border:2px solid #9fd8c2}.fb.no{background:#fdf0ee;border:2px solid #efb7ae}.fb.hint{background:#fff8e3;border:2px solid #f0d88a}
+.fb b.t{display:block;font-size:17px;margin-bottom:4px}.fb.ok b.t{color:var(--ok)}.fb.no b.t{color:var(--bad)}.fb.hint b.t{color:#9a6d00}
+.fb ol{margin:6px 0 0 0;padding-left:22px}.fb li{margin:4px 0}
+.grid100{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;width:min(260px,100%);margin:6px 0 4px}
+.grid100 i{aspect-ratio:1;border-radius:3px;background:#e3e9ef}.grid100 i.on{background:var(--c)}
+.dt{border-collapse:separate;border-spacing:0;margin:10px 0;font-size:17px}
+.dt td{padding:8px 12px;border-bottom:1px solid var(--line)}.dt td.l{font-weight:700;color:var(--navy);text-align:right}.dt td.r{font-weight:700}
+.dt td.op{color:var(--c);font-weight:800;font-size:14px;white-space:nowrap;border:0}
+.res{text-align:center;padding:30px 20px}
+.res .big{font-size:64px;line-height:1}.res h2{font-size:30px;margin:10px 0 4px;color:var(--navy)}
+.res .stars{font-size:40px;margin:8px 0}
+.lvup{display:inline-block;font-weight:900;font-size:16px;letter-spacing:.12em;color:#fff;background:linear-gradient(90deg,#e0a100,#ff7a59,#7048b0);padding:8px 18px;border-radius:99px;animation:bounce 1s ease infinite alternate}
+@keyframes bounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-4px) scale(1.05)}}
+.conf{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.conf i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.sheet table{width:100%;border-collapse:collapse;font-size:15px}.sheet td,.sheet th{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.sheet th{color:var(--navy);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.tabs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px;box-shadow:var(--shadow)}
+.tabs button{border:0;background:none;padding:8px 14px;border-radius:9px;font-weight:700;font-size:14px;color:var(--muted)}.tabs button.on{background:var(--navy);color:#fff}
+.foot{margin-top:30px;text-align:center;color:var(--muted);font-size:12px}
+.small{font-size:14px;color:var(--muted)}
+@media (max-width:700px){.tracks{grid-template-columns:1fr}h1{font-size:24px}.q{font-size:18px}.card{padding:16px}.btn{padding:12px 16px}}
+</style></head><body>
+<div class="bar"><div class="bar-in">
+  <button class="back" id="back"><svg class="ico" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span id="backt">Zur Übersicht</span></button>
+  <span class="sp"></span><span class="xp" id="xp">⭐ 0 Punkte</span>
+</div></div>
+<div class="wrap" id="app"></div>
+<div class="foot">© 2026 Waybuild Akademie, Waybuild UG (haftungsbeschränkt). Alle Rechte vorbehalten. · <a href="https://www.waybuild.de" target="_blank" rel="noopener">www.waybuild.de</a></div>
+<script>
+"use strict";
+/* ========== Hilfen ========== */
+const $ = s => document.querySelector(s);
+const ri = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const r2 = x => Math.round(x*100)/100;
+function z(x, dec){ /* deutsche Zahl */
+  x = r2(x);
+  const d = dec !== undefined ? dec : (Number.isInteger(x) ? 0 : 2);
+  return x.toLocaleString("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+const eur = x => z(x, Number.isInteger(r2(x)) ? 0 : 2) + " €";
+function parseNum(s){
+  s = String(s).replace(/[€%\s]/g,"").replace(/[^\d.,\-]/g,"");
+  if (!s) return NaN;
+  if (s.includes(",") && s.includes(".")) s = s.replace(/\./g,"").replace(",",".");
+  else if (s.includes(",")) s = s.replace(",",".");
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g,"");
+  return parseFloat(s);
+}
+function grid(k){ let h='<div class="grid100">'; for(let i=0;i<100;i++) h+=`<i class="${i<k?"on":""}"></i>`; return h+'</div>'; }
+function dtab(rows){ /* rows [ [links, rechts, op] ] */
+  return '<table class="dt">'+rows.map(r=>`<tr><td class="l">${r[0]}</td><td>➜</td><td class="r">${r[1]}</td><td class="op">${r[2]||""}</td></tr>`).join("")+'</table>';
+}
+const KEY = "kba015_kg";
+let S; try { S = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ S = {}; }
+S.xp = S.xp || 0; S.p = S.p || {}; S.d = S.d || {};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+
+/* ========== Inhalte ========== */
+const T = {};
+
+/* ---------- PROZENTRECHNEN ---------- */
+T.prozent = { name:"Prozentrechnen", emo:"💯", c:"#0077A6",
+ desc:"Von ganz am Anfang bis zur Rechnung mit Umsatzsteuer und Skonto.",
+ sheet:`<table>
+  <tr><th>Wort</th><th>Bedeutung</th><th>Beispiel</th></tr>
+  <tr><td><b>Grundwert</b></td><td>das Ganze, immer 100 %</td><td>der ganze Preis 200 €</td></tr>
+  <tr><td><b>Prozentsatz</b></td><td>wie viel Prozent, Zahl mit %</td><td>10 %</td></tr>
+  <tr><td><b>Prozentwert</b></td><td>der Teil vom Ganzen</td><td>20 €</td></tr>
+  <tr><td><b>Prozentwert finden</b></td><td>Grundwert : 100 × Prozentsatz</td><td>200 : 100 × 10 = 20</td></tr>
+  <tr><td><b>Prozentsatz finden</b></td><td>Prozentwert : Grundwert × 100</td><td>20 : 200 × 100 = 10</td></tr>
+  <tr><td><b>Grundwert finden</b></td><td>Prozentwert : Prozentsatz × 100</td><td>20 : 10 × 100 = 200</td></tr>
+  <tr><td><b>Netto zu Brutto</b></td><td>Netto × 1,19</td><td>100 € × 1,19 = 119 €</td></tr>
+  <tr><td><b>Brutto zu Netto</b></td><td>Brutto : 1,19</td><td>119 € : 1,19 = 100 €</td></tr>
+ </table><p class="small">Der Trick für alles bleibt gleich. Zuerst 1 % ausrechnen. Dann mal die Prozent nehmen, die Sie brauchen.</p>`,
+ levels:[
+ { t:"Was ist ein Prozent?", s:"1 von 100",
+   learn:`<p>Das Wort <b>Prozent</b> heißt <b>von hundert</b>.</p>
+   <p>Stellen Sie sich eine Tafel Schokolade mit <b>100 Stückchen</b> vor. Sie essen 1 Stückchen. Dann haben Sie <b>1 Prozent</b> gegessen. Man schreibt <b>1 %</b>.</p>
+   <div class="box bild"><div class="h">So sieht das aus</div>Hier sind 30 von 100 Kästchen blau. Das sind <b>30 %</b>.${grid(30)}</div>
+   <div class="box merke"><div class="h">Merke</div>Das Zeichen <b>%</b> heißt Prozent.<br>100 % ist <b>alles</b>, also das Ganze.<br>50 % ist die <b>Hälfte</b>.<br>0 % ist <b>gar nichts</b>.</div>`,
+   ex:{ q:"In einer Firma arbeiten 100 Menschen. 45 davon fahren mit dem Bus. Wie viel Prozent sind das?",
+        steps:["Es sind genau 100 Menschen. Prozent heißt von hundert. Das passt also perfekt.","45 von 100 Menschen fahren Bus.","45 von 100 sind <b>45 %</b>."]},
+   gen(){
+     const k = pick([10,20,25,30,40,50,60,70,75,80,90,15,35,45,55,65,5,12,8,3]);
+     if (Math.random()<.5) return { q:`Wie viel Prozent der Kästchen sind blau? Es sind 100 Kästchen.${grid(k)}`, a:k, u:"%",
+        steps:["Zählen Sie die blauen Kästchen. Eine Reihe hat 10 Kästchen.",`Es sind ${k} blaue Kästchen von 100.`,`${k} von 100 sind <b>${k} %</b>.`]};
+     const c = pick([["Von 100 Kundinnen und Kunden zahlen %K% mit Karte.","mit Karte"],["Von 100 Briefen sind %K% Rechnungen.","Rechnungen"],["In einer Firma arbeiten 100 Menschen. %K% davon arbeiten im Büro.","im Büro"],["Von 100 Ordnern im Regal sind %K% blau.","blau"]]);
+     return { q:c[0].replace("%K%",k)+" Wie viel Prozent sind das?", a:k, u:"%",
+        steps:["Das Ganze sind genau 100. Prozent heißt von hundert.",`${k} von 100 sind ${c[1]}.`,`Also sind es <b>${k} %</b>.`]};
+   }},
+ { t:"Die leichten Prozente", s:"Hälfte, Viertel, Zehntel",
+   learn:`<p>Einige Prozente kennen Sie schon aus dem Alltag. Man muss nur <b>teilen</b>.</p>
+   <table class="dt">
+   <tr><td class="l">100 %</td><td>➜</td><td class="r">alles</td><td class="op">nichts rechnen</td></tr>
+   <tr><td class="l">50 %</td><td>➜</td><td class="r">die Hälfte</td><td class="op">geteilt durch 2</td></tr>
+   <tr><td class="l">25 %</td><td>➜</td><td class="r">ein Viertel</td><td class="op">geteilt durch 4</td></tr>
+   <tr><td class="l">20 %</td><td>➜</td><td class="r">ein Fünftel</td><td class="op">geteilt durch 5</td></tr>
+   <tr><td class="l">10 %</td><td>➜</td><td class="r">ein Zehntel</td><td class="op">geteilt durch 10</td></tr>
+   <tr><td class="l">1 %</td><td>➜</td><td class="r">ein Hundertstel</td><td class="op">geteilt durch 100</td></tr></table>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Eine Pizza hat 4 Stücke. Ein Stück ist ein Viertel. Ein Viertel ist <b>25 %</b>.</div>
+   <div class="box tipp"><div class="h">Trick für 10 %</div>Bei 10 % nehmen Sie einfach die letzte Null weg.<br>10 % von 70 € sind 7 €.<br>10 % von 300 € sind 30 €.</div>
+   <p class="small">Das Zeichen : heißt geteilt durch. Das Zeichen × heißt mal.</p>`,
+   ex:{ q:"Wie viel sind 25 % von 80 €?", steps:["25 % ist ein Viertel. Also teilen wir durch 4.","80 € : 4 = 20 €.","25 % von 80 € sind <b>20 €</b>."]},
+   gen(){
+     const p = pick([50,25,10,20,1,50,10]);
+     const map = {50:[2,"die Hälfte"],25:[4,"ein Viertel"],20:[5,"ein Fünftel"],10:[10,"ein Zehntel"],1:[100,"ein Hundertstel"]};
+     const [d, wort] = map[p];
+     const g = p===1 ? ri(1,30)*100 : d*ri(2,p===10?40:30);
+     const ctx = pick(["von %G%","von einem Einkauf über %G%","von einem Monatslohn über %G%"]);
+     return { q:`Wie viel sind ${p} % ${ctx.replace("%G%",eur(g))}?`, a:g/d, u:"€",
+       steps:[`${p} % ist ${wort}. Also teilen wir durch ${d}.`,`${eur(g)} : ${d} = ${eur(g/d)}.`,`${p} % von ${eur(g)} sind <b>${eur(g/d)}</b>.`]};
+   }},
+ { t:"Jedes Prozent ausrechnen", s:"Der 1-%-Trick",
+   learn:`<p>Was ist mit 3 % oder 19 %? Dafür gibt es einen Trick, der <b>immer</b> klappt.</p>
+   <div class="box merke"><div class="h">Der 1-%-Trick in 2 Schritten</div><b>Schritt 1.</b> Rechnen Sie zuerst <b>1 %</b> aus. Dafür teilen Sie durch 100.<br><b>Schritt 2.</b> Nehmen Sie das Ergebnis <b>mal</b> die Prozente, die Sie suchen.</div>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Sie wissen, was <b>ein</b> Kaugummi kostet. Dann wissen Sie auch, was <b>sieben</b> Kaugummis kosten. Genauso ist es mit 1 % und 7 %.</div>
+   <div class="box tipp"><div class="h">Trick für geteilt durch 100</div>Bei geteilt durch 100 nehmen Sie zwei Nullen weg. 600 : 100 = 6.<br>Ohne Nullen rückt das Komma zwei Stellen nach links. 250 : 100 = 2,50.</div>`,
+   ex:{ q:"Wie viel sind 7 % von 300 €?", steps:["Schritt 1. Wir rechnen 1 % aus. 300 € : 100 = 3 €.","Schritt 2. Wir brauchen 7 %. Also 3 € × 7 = 21 €.","7 % von 300 € sind <b>21 €</b>."]},
+   gen(){
+     const g = pick([200,300,400,500,600,800,900,1000,1200,1500,2000,250,450,750,150]);
+     const p = pick([2,3,4,5,6,7,8,9,12,15,19,30,40,11]);
+     const one = g/100, a = one*p;
+     return { q:`Wie viel sind ${p} % von ${eur(g)}?`, a, u:"€",
+       steps:[`Schritt 1. 1 % ausrechnen. ${eur(g)} : 100 = ${eur(one)}.`,`Schritt 2. Mal ${p} nehmen. ${eur(one)} × ${p} = ${eur(a)}.`,`${p} % von ${eur(g)} sind <b>${eur(a)}</b>.`]};
+   }},
+ { t:"Die drei wichtigen Wörter", s:"Grundwert, Prozentsatz, Prozentwert",
+   learn:`<p>In der Prüfung stehen oft diese drei Wörter. Sie sind leichter, als sie klingen.</p>
+   <table class="dt">
+   <tr><td class="l">Grundwert</td><td>➜</td><td class="r">das <b>Ganze</b>. Das sind immer 100 %.</td></tr>
+   <tr><td class="l">Prozentsatz</td><td>➜</td><td class="r">die Zahl <b>mit dem %</b>-Zeichen</td></tr>
+   <tr><td class="l">Prozentwert</td><td>➜</td><td class="r">der <b>Teil</b> vom Ganzen, meist in €</td></tr></table>
+   <div class="box bild"><div class="h">Beispiel</div>Eine Jacke kostet <b>80 €</b>. Sie bekommen <b>25 %</b> Rabatt. Das sind <b>20 €</b>.<br>80 € ist das Ganze, also der <b>Grundwert</b>.<br>25 % ist der <b>Prozentsatz</b>.<br>20 € ist der Teil, also der <b>Prozentwert</b>.</div>
+   <div class="box tipp"><div class="h">Eselsbrücke</div><b>G</b>rundwert ist das <b>G</b>anze.<br>Der Prozent<b>satz</b> hat das Zeichen %.<br>Der Prozent<b>wert</b> ist der Teil, der etwas <b>wert</b> ist, also Euro.</div>`,
+   ex:{ q:"Von 400 € Lohn spart Lea 10 %. Das sind 40 €. Was ist der Grundwert?", steps:["Wir suchen das Ganze.","Das Ganze ist der ganze Lohn, also 400 €.","Der Grundwert ist <b>400 €</b>. 10 % ist der Prozentsatz und 40 € ist der Prozentwert."]},
+   gen(){
+     const g = pick([200,400,500,800,1000,1200,2000,600]); const p = pick([5,10,20,25,50,15]); const w = g*p/100;
+     const c = pick([[`Ein Laptop kostet ${eur(g)}. Es gibt ${p} % Rabatt. Das sind ${eur(w)}.`],[`Eine Firma hat ${eur(g)} Umsatz am Tag. ${p} % davon kommen aus dem Online-Shop. Das sind ${eur(w)}.`],[`Von ${eur(g)} Lohn gehen ${p} % an die Krankenkasse. Das sind ${eur(w)}.`],[`Eine Rechnung lautet über ${eur(g)}. Der Kunde bekommt ${p} % Nachlass. Das sind ${eur(w)}.`]])[0];
+     const ask = pick(["Grundwert","Prozentsatz","Prozentwert"]);
+     const opts = [eur(g), p+" %", eur(w)]; const ai = {Grundwert:0,Prozentsatz:1,Prozentwert:2}[ask];
+     const why = {Grundwert:`Der Grundwert ist das Ganze. Das Ganze ist ${eur(g)}.`, Prozentsatz:`Der Prozentsatz ist die Zahl mit dem %-Zeichen. Das ist ${p} %.`, Prozentwert:`Der Prozentwert ist der Teil vom Ganzen in Euro. Das ist ${eur(w)}.`}[ask];
+     return { q:`${c} Was ist hier der <b>${ask}</b>?`, choices:opts, a:ai, steps:[why]};
+   }},
+ { t:"Wie viel Prozent sind das?", s:"Den Prozentsatz finden",
+   learn:`<p>Jetzt kennen Sie den Teil und das Ganze. Sie suchen, <b>wie viel Prozent</b> das sind.</p>
+   <div class="box merke"><div class="h">So geht es in 2 Schritten</div><b>Schritt 1.</b> Teil geteilt durch das Ganze.<br><b>Schritt 2.</b> Das Ergebnis mal 100. Dann haben Sie die Prozent.</div>
+   <div class="f">Prozentsatz = Prozentwert : Grundwert × 100</div>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Sie haben 20 Fragen. 15 sind richtig. 15 : 20 = 0,75. 0,75 × 100 = 75. Sie haben <b>75 %</b> richtig.</div>
+   <div class="box tipp"><div class="h">Mal 100</div>Bei mal 100 rückt das Komma zwei Stellen nach rechts. 0,25 × 100 = 25.</div>`,
+   ex:{ q:"Eine Firma hat 120 Mitarbeitende. 30 davon sind Auszubildende. Wie viel Prozent sind das?", steps:["Schritt 1. Teil geteilt durch das Ganze. 30 : 120 = 0,25.","Schritt 2. Mal 100. 0,25 × 100 = 25.","Es sind <b>25 %</b>."]},
+   gen(){
+     const p = pick([10,20,25,40,50,75,5,15,30,60,80,12]);
+     const g = pick([20,40,50,80,100,120,200,250,400,500,600,800,1000].filter(x=>Number.isInteger(x*p/100)));
+     const w = g*p/100;
+     const c = pick([[`Ein Lager hat ${g} Kartons. ${w} davon sind schon verkauft.`],[`Eine Rechnung lautet über ${eur(g)}. Der Kunde hat schon ${eur(w)} bezahlt.`],[`In einem Kurs sind ${g} Fragen. ${w} Fragen sind richtig.`],[`Eine Firma hat ${eur(g)} Gewinn. ${eur(w)} davon gehen in neue Computer.`]])[0];
+     return { q:`${c} Wie viel Prozent sind das?`, a:p, u:"%",
+       steps:[`Schritt 1. Teil geteilt durch das Ganze. ${z(w)} : ${z(g)} = ${z(w/g)}.`,`Schritt 2. Mal 100. ${z(w/g)} × 100 = ${p}.`,`Es sind <b>${p} %</b>.`]};
+   }},
+ { t:"Das Ganze finden", s:"Den Grundwert finden",
+   learn:`<p>Jetzt ist es umgekehrt. Sie kennen einen <b>Teil</b> und wie viel Prozent er ist. Sie suchen das <b>Ganze</b>, also 100 %.</p>
+   <div class="box merke"><div class="h">Wieder der 1-%-Trick</div><b>Schritt 1.</b> Teil geteilt durch die Prozente. Dann haben Sie <b>1 %</b>.<br><b>Schritt 2.</b> 1 % mal 100. Dann haben Sie <b>100 %</b>, also das Ganze.</div>
+   <div class="f">Grundwert = Prozentwert : Prozentsatz × 100</div>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Sie haben 10 % Ihres Geldes ausgegeben. Das waren 5 €. Dann ist 1 % gleich 50 Cent. Alles, also 100 %, sind 50 €.</div>`,
+   ex:{ q:"15 € sind 5 % von einem Preis. Wie hoch ist der ganze Preis?", steps:["Schritt 1. 1 % ausrechnen. 15 € : 5 = 3 €.","Schritt 2. Das Ganze sind 100 %. 3 € × 100 = 300 €.","Der ganze Preis ist <b>300 €</b>."]},
+   gen(){
+     const one = pick([2,3,4,5,6,8,10,12,15,20,1.5,2.5]); const p = pick([2,3,4,5,10,20,25,8,15]);
+     const w = one*p, g = one*100;
+     const c = pick([`Ein Kunde bekommt ${p} % Rabatt. Das sind ${eur(w)}. Wie hoch war der ganze Preis?`,`Lea spart jeden Monat ${p} % von ihrem Geld. Das sind ${eur(w)}. Wie viel Geld hat Lea im Monat?`,`Die Firma zahlt ${p} % Zinsen. Das sind ${eur(w)}. Wie hoch ist das ganze Darlehen?`,`${eur(w)} sind ${p} % von einem Betrag. Wie hoch ist der ganze Betrag?`]);
+     return { q:c, a:g, u:"€",
+       steps:[`Schritt 1. 1 % ausrechnen. ${eur(w)} : ${p} = ${eur(one)}.`,`Schritt 2. Mal 100 für das Ganze. ${eur(one)} × 100 = ${eur(g)}.`,`Das Ganze ist <b>${eur(g)}</b>.`]};
+   }},
+ { t:"Rabatt und Aufschlag", s:"Preis wird kleiner oder größer",
+   learn:`<p>Im Büro rechnen Sie oft mit Preisen, die <b>kleiner</b> oder <b>größer</b> werden.</p>
+   <div class="box merke"><div class="h">Weniger oder mehr</div><b>Rabatt</b> oder <b>Skonto</b> heißt Nachlass. Der Preis wird <b>kleiner</b>. Also <b>minus</b>.<br><b>Aufschlag</b> oder <b>Umsatzsteuer</b> heißt zusätzlich. Der Preis wird <b>größer</b>. Also <b>plus</b>.</div>
+   <div class="box bild"><div class="h">Beispiel Rabatt</div>Ein Stuhl kostet 200 €. Es gibt 10 % Rabatt.<br>10 % von 200 € sind 20 €.<br>200 € minus 20 € = <b>180 €</b>.</div>
+   <div class="box bild"><div class="h">Beispiel Umsatzsteuer</div>Der Preis ohne Steuer heißt <b>netto</b>. Mit Steuer heißt er <b>brutto</b>. Die Umsatzsteuer ist meistens 19 %.<br>Netto 100 €. 19 % von 100 € sind 19 €.<br>100 € plus 19 € = <b>119 €</b> brutto.</div>
+   <div class="box tipp"><div class="h">Profi-Trick</div>10 % Rabatt heißt, Sie zahlen noch 90 %. 200 € × 0,9 = 180 €.<br>19 % Steuer dazu heißt, Sie zahlen 119 %. 100 € × 1,19 = 119 €.</div>`,
+   ex:{ q:"Ein Drucker kostet 300 € netto. Wie viel kostet er brutto mit 19 % Umsatzsteuer?", steps:["Schritt 1. 1 % von 300 € = 3 €.","Schritt 2. 19 % sind 3 € × 19 = 57 €.","Schritt 3. Steuer kommt dazu, also plus. 300 € + 57 € = <b>357 €</b>."]},
+   gen(){
+     if (Math.random()<.5){
+       const g = pick([100,200,300,400,500,600,800,1000,1200,1500]); const p = pick([5,10,15,20,25,30]); const w = g*p/100;
+       const it = pick(["Ein Bürostuhl","Ein Schreibtisch","Ein Bildschirm","Ein Regal","Ein Drucker"]);
+       return { q:`${it} kostet ${eur(g)}. Es gibt ${p} % Rabatt. Wie viel müssen Sie noch bezahlen?`, a:g-w, u:"€",
+         steps:[`Schritt 1. Rabatt ausrechnen. 1 % von ${eur(g)} = ${eur(g/100)}. Mal ${p} = ${eur(w)}.`,`Schritt 2. Rabatt heißt weniger, also minus. ${eur(g)} minus ${eur(w)} = ${eur(g-w)}.`,`Sie zahlen noch <b>${eur(g-w)}</b>.`]};
+     }
+     const g = pick([100,200,300,400,500,600,700,800,1000,1200,2000]); const w = g*19/100;
+     return { q:`Eine Ware kostet ${eur(g)} netto. Wie viel kostet sie brutto mit 19 % Umsatzsteuer?`, a:g+w, u:"€",
+       steps:[`Schritt 1. 1 % von ${eur(g)} = ${eur(g/100)}.`,`Schritt 2. 19 % sind ${eur(g/100)} × 19 = ${eur(w)}.`,`Schritt 3. Steuer kommt dazu, also plus. ${eur(g)} + ${eur(w)} = <b>${eur(g+w)}</b>.`]};
+   }},
+ { t:"Prüfungsniveau", s:"Rückwärts rechnen und Skonto",
+   learn:`<p>Das ist die Königsklasse. Hier stolpern viele. Mit dem 1-%-Trick schaffen Sie das.</p>
+   <div class="box acht"><div class="h">Achtung Falle</div>Sie haben den <b>Bruttopreis</b> und suchen den Nettopreis. Dann ist der Bruttopreis <b>nicht 100 %</b>. Er ist <b>119 %</b>, denn die Steuer ist schon drin.<br>Falsch ist, einfach 19 % abzuziehen.</div>
+   <div class="box merke"><div class="h">Brutto zu Netto in 2 Schritten</div><b>Schritt 1.</b> Brutto geteilt durch 119. Das ist 1 %.<br><b>Schritt 2.</b> 1 % mal 100. Das ist netto.</div>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Ein Glas mit Wasser und Saft. Netto ist das Wasser, die Steuer ist der Saft. Zusammen ist es brutto, also 119 Teile. Ein Teil ist 1 %.</div>
+   <div class="box merke"><div class="h">Skonto</div>Skonto ist ein kleiner Nachlass, wenn Sie schnell bezahlen. Zum Beispiel 2 % bei Zahlung in 10 Tagen. Also Rechnungsbetrag minus Skonto.</div>`,
+   ex:{ q:"Eine Rechnung lautet über 2.380 € brutto. Wie hoch ist der Nettobetrag?", steps:["Brutto sind 119 %.","Schritt 1. 1 % ausrechnen. 2.380 € : 119 = 20 €.","Schritt 2. Netto sind 100 %. 20 € × 100 = 2.000 €.","Der Nettobetrag ist <b>2.000 €</b>. Die Steuer ist 380 €."]},
+   gen(){
+     const k = pick(["bn","bn","ust","sk","rab"]);
+     if (k==="bn"){ const n = pick([100,200,300,400,500,600,800,1000,1500,2000,2500,3000]); const b = n*1.19;
+       return { q:`Eine Rechnung lautet über ${eur(b)} brutto mit 19 % Umsatzsteuer. Wie hoch ist der Nettobetrag?`, a:n, u:"€",
+         steps:["Brutto sind 119 %, nicht 100 %.",`Schritt 1. 1 % ausrechnen. ${eur(b)} : 119 = ${eur(n/100)}.`,`Schritt 2. Netto sind 100 %. ${eur(n/100)} × 100 = ${eur(n)}.`,`Der Nettobetrag ist <b>${eur(n)}</b>.`]}; }
+     if (k==="ust"){ const n = pick([100,200,300,500,1000,2000,400]); const b = n*1.19, u = n*0.19;
+       return { q:`Ein Kunde zahlt ${eur(b)} brutto. Wie viel Euro Umsatzsteuer (19 %) stecken darin?`, a:u, u:"€",
+         steps:["Brutto sind 119 %.",`Schritt 1. 1 % ausrechnen. ${eur(b)} : 119 = ${eur(n/100)}.`,`Schritt 2. Die Steuer sind 19 %. ${eur(n/100)} × 19 = ${eur(u)}.`,`Die Umsatzsteuer ist <b>${eur(u)}</b>.`]}; }
+     if (k==="sk"){ const r = pick([500,800,1000,1200,1500,2000,2500,3000,4000]); const p = pick([2,3]); const s = r*p/100;
+       return { q:`Eine Rechnung lautet über ${eur(r)}. Wenn Sie in 10 Tagen zahlen, gibt es ${p} % Skonto. Wie viel überweisen Sie?`, a:r-s, u:"€",
+         steps:[`Schritt 1. Skonto ausrechnen. 1 % von ${eur(r)} = ${eur(r/100)}. Mal ${p} = ${eur(s)}.`,`Schritt 2. Skonto heißt weniger, also minus. ${eur(r)} minus ${eur(s)} = ${eur(r-s)}.`,`Sie überweisen <b>${eur(r-s)}</b>.`]}; }
+     const g = pick([100,200,250,300,400,500,800]); const p = pick([10,20,25]); const neu = g*(100-p)/100;
+     return { q:`Nach ${p} % Rabatt kostet ein Stuhl nur noch ${eur(neu)}. Wie viel hat er vorher gekostet?`, a:g, u:"€",
+       steps:[`Vorher waren es 100 %. Nach ${p} % Rabatt sind noch ${100-p} % übrig. ${eur(neu)} sind also ${100-p} %.`,`Schritt 1. 1 % ausrechnen. ${eur(neu)} : ${100-p} = ${eur(g/100)}.`,`Schritt 2. Mal 100. ${eur(g/100)} × 100 = ${eur(g)}.`,`Vorher kostete er <b>${eur(g)}</b>.`]};
+   }}
+ ]};
+
+/* ---------- DREISATZ ---------- */
+T.dreisatz = { name:"Dreisatz", emo:"🔺", c:"#7048b0",
+ desc:"In drei kleinen Schritten zu jeder Lösung. Auch umgekehrt.",
+ sheet:`<table>
+  <tr><th>Art</th><th>So erkennen</th><th>So rechnen</th></tr>
+  <tr><td><b>Gerader Dreisatz</b></td><td>je mehr, desto mehr<br>mehr Stück, mehr Geld</td><td>1. Satz aufschreiben<br>2. auf 1 rechnen, also <b>teilen</b><br>3. auf die gesuchte Menge, also <b>mal</b></td></tr>
+  <tr><td><b>Umgekehrter Dreisatz</b></td><td>je mehr, desto weniger<br>mehr Leute, weniger Zeit</td><td>1. Satz aufschreiben<br>2. auf 1 rechnen, also <b>mal</b><br>3. auf die gesuchte Menge, also <b>teilen</b></td></tr>
+ </table><p class="small">Das Gesuchte steht im Satz immer rechts. Die Zahl, die Sie kennen, steht links.</p>`,
+ levels:[
+ { t:"Von 1 auf viele", s:"Einfach mal rechnen",
+   learn:`<p>Der Dreisatz ist eine Rechnung in drei kleinen Schritten. Wir fangen mit dem leichtesten Teil an.</p>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Ein Brötchen kostet 1 €. Wie viel kosten 4 Brötchen? Natürlich 4 €. Sie haben einfach <b>mal 4</b> gerechnet.</div>
+   <div class="box merke"><div class="h">Merke</div>Sie kennen den Preis für <b>ein</b> Stück. Sie wollen den Preis für <b>viele</b> Stücke. Dann rechnen Sie <b>mal</b>.</div>
+   ${dtab([["1 Ordner","3 €",""],["5 Ordner","15 €","× 5"]])}`,
+   ex:{ q:"Ein Kugelschreiber kostet 2 €. Wie viel kosten 6 Kugelschreiber?", steps:["Wir kennen den Preis für 1 Stück. Das sind 2 €.","Wir wollen 6 Stück. Also mal 6.","2 € × 6 = <b>12 €</b>."]},
+   gen(){
+     const it = pick([["Ordner","Ordner",[2,2.5,3,4]],["Kugelschreiber","Kugelschreiber",[1,1.5,2]],["Heft","Hefte",[1,1.5,2]],["Locher","Locher",[5,6,8,10]],["Paket Papier","Pakete Papier",[4,5,6]],["Kaffee","Kaffees",[1.5,2,2.5,3]]]);
+     const p = pick(it[2]); const n = ri(3,12);
+     return { q:`1 ${it[0]} kostet ${eur(p)}. Wie viel kosten ${n} ${it[1]}?`, a:p*n, u:"€",
+       steps:[`Wir kennen den Preis für 1 Stück. Das sind ${eur(p)}.`,`Wir wollen ${n} Stück. Also mal ${n}.`,`${eur(p)} × ${n} = <b>${eur(p*n)}</b>.`]};
+   }},
+ { t:"Von vielen auf 1", s:"Einfach teilen",
+   learn:`<p>Jetzt ist es umgekehrt. Sie kennen den Preis für <b>viele</b> Stücke. Sie wollen den Preis für <b>ein</b> Stück.</p>
+   <div class="box bild"><div class="h">Bild im Kopf</div>4 Freunde teilen sich eine Pizza für 20 €. Jeder zahlt 5 €. Sie haben <b>geteilt durch 4</b> gerechnet.</div>
+   <div class="box merke"><div class="h">Merke</div>Von vielen auf <b>eins</b> heißt <b>teilen</b>.</div>
+   ${dtab([["4 Hefte","8 €",""],["1 Heft","2 €",": 4"]])}
+   <p>Dieser Schritt ist das <b>Herz</b> vom Dreisatz. Wir rechnen immer zuerst auf 1 herunter.</p>`,
+   ex:{ q:"5 Ordner kosten 15 €. Wie viel kostet 1 Ordner?", steps:["Wir kennen den Preis für 5 Ordner. Das sind 15 €.","Wir wollen 1 Ordner. Also teilen durch 5.","15 € : 5 = <b>3 €</b>."]},
+   gen(){
+     const it = pick([["Ordner","Ordner",[2,3,4]],["Hefte","Heft",[1.5,2,2.5]],["Kartons","Karton",[2,3,5]],["Druckerpatronen","Druckerpatrone",[12,15,20,25]],["Stühle","Stuhl",[45,60,80,120]],["Taschenrechner","Taschenrechner",[8,9,12,15]]]);
+     const p = pick(it[2]); const n = ri(3,10);
+     return { q:`${n} ${it[0]} kosten ${eur(p*n)}. Wie viel kostet 1 ${it[1]}?`, a:p, u:"€",
+       steps:[`Wir kennen den Preis für ${n} Stück. Das sind ${eur(p*n)}.`,`Wir wollen 1 Stück. Also teilen durch ${n}.`,`${eur(p*n)} : ${n} = <b>${eur(p)}</b>.`]};
+   }},
+ { t:"Der ganze Dreisatz", s:"Erst auf 1, dann auf viele",
+   learn:`<p>Jetzt setzen wir beides zusammen. Das sind die <b>drei Sätze</b>.</p>
+   <div class="box merke"><div class="h">Die 3 Schritte</div><b>Schritt 1.</b> Schreiben Sie auf, was Sie wissen.<br><b>Schritt 2.</b> Rechnen Sie auf <b>1</b> herunter. Also <b>teilen</b>.<br><b>Schritt 3.</b> Rechnen Sie auf die gesuchte Zahl hoch. Also <b>mal</b>.</div>
+   ${dtab([["3 kg Kaffee","12 €","Schritt 1"],["1 kg Kaffee","4 €",": 3"],["5 kg Kaffee","20 €","× 5"]])}
+   <div class="box tipp"><div class="h">Wichtig</div>Was Sie suchen, steht immer <b>rechts</b>. Hier suchen wir den Preis. Also steht der Preis rechts.</div>`,
+   ex:{ q:"3 kg Kaffee kosten 12 €. Wie viel kosten 5 kg?", steps:["Schritt 1. Aufschreiben. 3 kg kosten 12 €.","Schritt 2. Auf 1 kg. Teilen durch 3. 12 € : 3 = 4 €. 1 kg kostet 4 €.","Schritt 3. Auf 5 kg. Mal 5. 4 € × 5 = 20 €.","5 kg kosten <b>20 €</b>."]},
+   gen(){
+     const c = pick([["Pakete Papier","Paket Papier"],["kg Kaffee","kg Kaffee"],["Ordner","Ordner"],["Stühle","Stuhl"],["Kartons Wasser","Karton Wasser"]]);
+     const u = pick([2,3,4,5,6,8,10,12,15,20,25]); let a = ri(2,8), b = ri(2,12); if (a===b) b=a+3;
+     return { q:`${a} ${c[0]} kosten ${eur(u*a)}. Wie viel kosten ${b} ${c[0]}?`, a:u*b, u:"€",
+       steps:[`Schritt 1. Aufschreiben. ${a} ${c[0]} kosten ${eur(u*a)}.`,`Schritt 2. Auf 1. Teilen durch ${a}. ${eur(u*a)} : ${a} = ${eur(u)}.`,`Schritt 3. Auf ${b}. Mal ${b}. ${eur(u)} × ${b} = ${eur(u*b)}.`,`${b} ${c[0]} kosten <b>${eur(u*b)}</b>.`]};
+   }},
+ { t:"Dreisatz im Alltag", s:"Liter, Stunden, Kilometer",
+   learn:`<p>Der Dreisatz klappt nicht nur mit Preisen. Er klappt mit Litern, Stunden, Kilometern und vielem mehr. Die Schritte bleiben <b>genau gleich</b>.</p>
+   ${dtab([["8 Stunden Arbeit","120 €","Schritt 1"],["1 Stunde Arbeit","15 €",": 8"],["20 Stunden Arbeit","300 €","× 20"]])}
+   <div class="box tipp"><div class="h">Kommazahlen</div>Manchmal kommt eine Kommazahl heraus, zum Beispiel 1,80 €. Das ist kein Problem. Rechnen Sie einfach weiter. Ein Taschenrechner hilft.</div>
+   <div class="box merke"><div class="h">Prüfen Sie sich selbst</div>Mehr Stunden, mehr Geld? Dann muss das Ergebnis größer sein. Weniger Stunden? Dann kleiner.</div>`,
+   ex:{ q:"Ein Auto fährt mit 6 Litern Benzin 100 km. Wie viele Liter braucht es für 250 km?", steps:["Hier suchen wir Liter. Also stehen die Liter rechts.","Schritt 1. 100 km brauchen 6 Liter.","Schritt 2. Auf 1 km. 6 : 100 = 0,06 Liter.","Schritt 3. Auf 250 km. 0,06 × 250 = 15 Liter.","Das Auto braucht <b>15 Liter</b>."]},
+   gen(){
+     const k = pick(["lohn","benzin","kopie","papier"]);
+     if (k==="lohn"){ const u = pick([12.5,13,14,15,16,18,20]); const a = pick([4,5,8,10]); const b = pick([6,12,15,20,25,30,40]);
+       return { q:`Für ${a} Stunden Arbeit bekommt Jonas ${eur(u*a)}. Wie viel bekommt er für ${b} Stunden?`, a:u*b, u:"€",
+         steps:[`Schritt 1. ${a} Stunden bringen ${eur(u*a)}.`,`Schritt 2. Auf 1 Stunde. ${eur(u*a)} : ${a} = ${eur(u)}.`,`Schritt 3. Auf ${b} Stunden. ${eur(u)} × ${b} = ${eur(u*b)}.`,`Jonas bekommt <b>${eur(u*b)}</b>.`]}; }
+     if (k==="benzin"){ const l = pick([5,6,7,8]); const km = pick([150,200,250,300,400,50]);
+       return { q:`Ein Firmenauto braucht ${l} Liter für 100 km. Wie viele Liter braucht es für ${km} km?`, a:l*km/100, u:"Liter",
+         steps:[`Schritt 1. 100 km brauchen ${l} Liter.`,`Schritt 2. Auf 1 km. ${l} : 100 = ${z(l/100)} Liter.`,`Schritt 3. Auf ${km} km. ${z(l/100)} × ${km} = ${z(l*km/100)} Liter.`,`Es braucht <b>${z(l*km/100)} Liter</b>.`]}; }
+     if (k==="kopie"){ const pp = pick([0.05,0.1,0.2,0.04]); const a = pick([10,20,50,100]); const b = pick([30,40,150,200,250,500]);
+       return { q:`${a} Kopien kosten ${eur(pp*a)}. Wie viel kosten ${b} Kopien?`, a:pp*b, u:"€",
+         steps:[`Schritt 1. ${a} Kopien kosten ${eur(pp*a)}.`,`Schritt 2. Auf 1 Kopie. ${eur(pp*a)} : ${a} = ${eur(pp)}.`,`Schritt 3. Auf ${b} Kopien. ${eur(pp)} × ${b} = ${eur(pp*b)}.`,`${b} Kopien kosten <b>${eur(pp*b)}</b>.`]}; }
+     const u = pick([3.5,4.5,5,6.5,4]); const a = pick([2,4,5]); const b = pick([6,8,10,12,15]);
+     return { q:`${a} Pakete Druckerpapier kosten ${eur(u*a)}. Wie viel kosten ${b} Pakete?`, a:u*b, u:"€",
+       steps:[`Schritt 1. ${a} Pakete kosten ${eur(u*a)}.`,`Schritt 2. Auf 1 Paket. ${eur(u*a)} : ${a} = ${eur(u)}.`,`Schritt 3. Auf ${b} Pakete. ${eur(u)} × ${b} = ${eur(u*b)}.`,`${b} Pakete kosten <b>${eur(u*b)}</b>.`]};
+   }},
+ { t:"Der umgekehrte Dreisatz", s:"Je mehr, desto weniger",
+   learn:`<p>Manchmal ist es andersherum. <b>Mehr</b> Leute arbeiten, dann geht es <b>schneller</b>. Die Zeit wird also <b>weniger</b>.</p>
+   <div class="box bild"><div class="h">Bild im Kopf</div>1 Person räumt das Lager in 6 Stunden auf. Kommen 2 Personen, geht es doppelt so schnell. Dann dauert es nur 3 Stunden.</div>
+   <div class="box merke"><div class="h">Die 3 Schritte, aber umgekehrt</div><b>Schritt 1.</b> Aufschreiben, was Sie wissen.<br><b>Schritt 2.</b> Auf <b>1</b> Person. Eine Person allein braucht <b>länger</b>. Also <b>mal</b>.<br><b>Schritt 3.</b> Auf die gesuchte Zahl. Mehr Personen sind schneller. Also <b>teilen</b>.</div>
+   ${dtab([["3 Personen","8 Stunden","Schritt 1"],["1 Person","24 Stunden","× 3"],["6 Personen","4 Stunden",": 6"]])}
+   <div class="box acht"><div class="h">Achtung</div>Beim umgekehrten Dreisatz ist es genau andersherum. Erst mal, dann teilen.</div>`,
+   ex:{ q:"3 Personen brauchen 8 Stunden für eine Inventur. Wie lange brauchen 6 Personen?", steps:["Mehr Personen, weniger Zeit. Also umgekehrt.","Schritt 1. 3 Personen brauchen 8 Stunden.","Schritt 2. 1 Person allein braucht länger. Also mal 3. 8 × 3 = 24 Stunden.","Schritt 3. 6 Personen sind schneller. Also teilen durch 6. 24 : 6 = 4 Stunden.","6 Personen brauchen <b>4 Stunden</b>."]},
+   gen(){
+     const pairs = [[2,6],[3,4],[4,3],[2,4],[3,6],[6,2],[4,6],[2,8],[5,4],[3,2]]; let [a,t] = pick(pairs); const tot = a*t;
+     const opts = [2,3,4,6,8,12].filter(b => b!==a && Number.isInteger(tot/b)); const b = pick(opts);
+     const c = pick([["Personen","Person","Stunden","räumen das Lager auf","Stunden"],["Mitarbeitende","Person","Tage","schreiben die Inventurlisten","Tagen"],["Drucker","Drucker","Stunden","drucken alle Flyer","Stunden"],["Personen","Person","Stunden","packen alle Pakete","Stunden"]]);
+     const one = c[1]==="Drucker" ? "1 Drucker" : "1 Person";
+     return { q:`${a} ${c[0]} ${c[3]} in ${t} ${c[4]}. Wie lange brauchen ${b} ${c[0]}?`, a:tot/b, u:c[2],
+       steps:[`${b>a?"Mehr":"Weniger"} ${c[0]}, ${b>a?"weniger":"mehr"} Zeit. Also umgekehrt.`,`Schritt 1. ${a} ${c[0]} brauchen ${t} ${c[2]}.`,`Schritt 2. ${one} allein braucht länger. Also mal ${a}. ${t} × ${a} = ${tot} ${c[2]}.`,`Schritt 3. Auf ${b} ${c[0]}. Also teilen durch ${b}. ${tot} : ${b} = ${z(tot/b)} ${c[2]}.`,`${b} ${c[0]} brauchen <b>${z(tot/b)} ${c[2]}</b>.`]};
+   }},
+ { t:"Gerade oder umgekehrt?", s:"Den richtigen Weg erkennen",
+   learn:`<p>Vor dem Rechnen fragen Sie sich immer eine Sache. <b>Was passiert, wenn es mehr wird?</b></p>
+   <div class="box merke"><div class="h">Die Frage, die immer hilft</div><b>Je mehr, desto mehr</b>. Das ist der <b>gerade</b> Dreisatz. Beispiel mehr Brötchen, mehr Geld.<br><b>Je mehr, desto weniger</b>. Das ist der <b>umgekehrte</b> Dreisatz. Beispiel mehr Leute, weniger Zeit.</div>
+   <div class="box tipp"><div class="h">Eselsbrücke</div>Gerade geht geradeaus. Beide werden größer.<br>Umgekehrt dreht sich um. Eins wird größer, das andere kleiner.</div>`,
+   ex:{ q:"Mehr Kopien kosten mehr Geld. Welcher Dreisatz ist das?", steps:["Wir fragen uns, was passiert, wenn es mehr Kopien werden.","Es kostet dann mehr Geld. Je mehr, desto mehr.","Das ist der <b>gerade</b> Dreisatz."]},
+   gen(){
+     const pool = [
+       ["Mehr Ordner kosten mehr Geld.",0],["Mehr Arbeitsstunden bringen mehr Lohn.",0],["Mehr Kilometer brauchen mehr Benzin.",0],["Mehr Pakete wiegen mehr.",0],["Mehr Gäste essen mehr Brötchen.",0],["Mehr gedruckte Seiten brauchen mehr Toner.",0],
+       ["Mehr Personen packen die Pakete schneller. Es dauert weniger lang.",1],["Mehr Drucker drucken die Flyer schneller fertig.",1],["Ein Vorrat Kaffee reicht für weniger Tage, wenn mehr Leute trinken.",1],["Wenn mehr Leute einen Betrag teilen, zahlt jeder weniger.",1],["Mit mehr Kassen ist die Warteschlange schneller weg.",1],["Ein Auto fährt schneller und braucht weniger Zeit für die Strecke.",1]];
+     const [s, a] = pick(pool);
+     return { q:`${s}<br>Welcher Dreisatz ist das?`, choices:["Gerader Dreisatz. Je mehr, desto mehr.","Umgekehrter Dreisatz. Je mehr, desto weniger."], a,
+       steps:[a===0 ? "Wenn das eine mehr wird, wird das andere auch mehr. Je mehr, desto mehr. Also gerade." : "Wenn das eine mehr wird, wird das andere weniger. Je mehr, desto weniger. Also umgekehrt."]};
+   }},
+ { t:"Dreisatz im Büro", s:"Gemischte Aufgaben",
+   learn:`<p>Jetzt wird gemischt. Manchmal ist es gerade, manchmal umgekehrt. Sie wissen jetzt, wie Sie es erkennen.</p>
+   <div class="box merke"><div class="h">Ihr Plan für jede Aufgabe</div><b>1.</b> Was suche ich? Das kommt nach rechts.<br><b>2.</b> Je mehr, desto mehr? Oder je mehr, desto weniger?<br><b>3.</b> Auf 1 rechnen und dann auf die gesuchte Zahl.</div>
+   <div class="box bild"><div class="h">Beispiel Urlaub</div>Lea hat 30 Urlaubstage im Jahr. Sie arbeitet in diesem Jahr nur 4 Monate. Ein Jahr hat 12 Monate.<br>1 Monat sind 30 : 12 = 2,5 Tage. 4 Monate sind 2,5 × 4 = <b>10 Tage</b>.</div>`,
+   ex:{ q:"Ein Vorrat Kaffee reicht für 5 Personen 12 Tage. Wie lange reicht er für 6 Personen?", steps:["Mehr Personen trinken den Kaffee schneller leer. Je mehr, desto weniger. Also umgekehrt.","Schritt 1. 5 Personen, 12 Tage.","Schritt 2. 1 Person allein reicht länger. Also mal 5. 12 × 5 = 60 Tage.","Schritt 3. 6 Personen. Also teilen durch 6. 60 : 6 = 10 Tage.","Der Vorrat reicht <b>10 Tage</b>."]},
+   gen(){
+     const k = pick(["urlaub","km","vorrat","teilen","lohn"]);
+     if (k==="urlaub"){ const j = pick([24,30,36,18]); const m = pick([2,4,6,8,10,3]); const a = j/12*m;
+       return { q:`Ein Mitarbeiter hat ${j} Urlaubstage im Jahr. Er arbeitet in diesem Jahr nur ${m} Monate. Wie viele Urlaubstage bekommt er? Ein Jahr hat 12 Monate.`, a, u:"Tage",
+         steps:["Mehr Monate, mehr Urlaub. Also gerade.",`Schritt 1. 12 Monate bringen ${j} Tage.`,`Schritt 2. Auf 1 Monat. ${j} : 12 = ${z(j/12)} Tage.`,`Schritt 3. Auf ${m} Monate. ${z(j/12)} × ${m} = ${z(a)} Tage.`,`Er bekommt <b>${z(a)} Tage</b>.`]}; }
+     if (k==="km"){ const r = 0.3; const km = pick([20,40,50,80,120,150,200]);
+       return { q:`Für 10 km Dienstfahrt zahlt die Firma 3 €. Wie viel zahlt sie für ${km} km?`, a:r*km, u:"€",
+         steps:["Mehr Kilometer, mehr Geld. Also gerade.","Schritt 1. 10 km bringen 3 €.","Schritt 2. Auf 1 km. 3 € : 10 = 0,30 €.",`Schritt 3. Auf ${km} km. 0,30 € × ${km} = ${eur(r*km)}.`,`Die Firma zahlt <b>${eur(r*km)}</b>.`]}; }
+     if (k==="vorrat"){ const [a,t,b] = pick([[4,15,6],[5,12,10],[6,10,4],[3,20,5],[8,6,12],[10,6,4]]); const tot = a*t;
+       return { q:`Ein Vorrat Wasser im Büro reicht für ${a} Personen ${t} Tage. Wie lange reicht er für ${b} Personen?`, a:tot/b, u:"Tage",
+         steps:[`Mehr Personen trinken schneller. Je mehr, desto weniger. Also umgekehrt.`,`Schritt 1. ${a} Personen, ${t} Tage.`,`Schritt 2. 1 Person allein. Also mal ${a}. ${t} × ${a} = ${tot} Tage.`,`Schritt 3. ${b} Personen. Also teilen durch ${b}. ${tot} : ${b} = ${z(tot/b)} Tage.`,`Er reicht <b>${z(tot/b)} Tage</b>.`]}; }
+     if (k==="teilen"){ const [a,b] = pick([[4,6],[6,4],[5,10],[8,4],[3,6],[10,8]]); const each = pick([10,12,15,20,24,30,40].filter(e => Number.isInteger(a*e/b))); const tot = a*each;
+       return { q:`Für ein Abschiedsgeschenk zahlen ${a} Kolleginnen je ${eur(each)}. Wie viel zahlt jede, wenn ${b} Kolleginnen mitmachen?`, a:tot/b, u:"€",
+         steps:["Mehr Leute teilen, jeder zahlt weniger. Also umgekehrt.",`Schritt 1. ${a} Personen zahlen je ${eur(each)}.`,`Schritt 2. 1 Person allein müsste alles zahlen. Also mal ${a}. ${eur(each)} × ${a} = ${eur(tot)}.`,`Schritt 3. ${b} Personen teilen. ${eur(tot)} : ${b} = ${eur(tot/b)}.`,`Jede zahlt <b>${eur(tot/b)}</b>.`]}; }
+     const u = pick([14,15,16,18]); const a = pick([5,8]); const b = pick([20,30,35,40]);
+     return { q:`Eine Aushilfe verdient in ${a} Stunden ${eur(u*a)}. Wie viel verdient sie in ${b} Stunden?`, a:u*b, u:"€",
+       steps:["Mehr Stunden, mehr Geld. Also gerade.",`Schritt 1. ${a} Stunden, ${eur(u*a)}.`,`Schritt 2. Auf 1 Stunde. ${eur(u*a)} : ${a} = ${eur(u)}.`,`Schritt 3. Auf ${b} Stunden. ${eur(u)} × ${b} = ${eur(u*b)}.`,`Sie verdient <b>${eur(u*b)}</b>.`]};
+   }},
+ { t:"Dreisatz und Prozent", s:"Prüfungsniveau",
+   learn:`<p>Hier kommt das Beste. Prozentrechnen ist auch ein Dreisatz. 100 % ist das Ganze.</p>
+   ${dtab([["100 %","250 €","Schritt 1"],["1 %","2,50 €",": 100"],["19 %","47,50 €","× 19"]])}
+   <div class="box merke"><div class="h">Merke</div>Das Ganze ist immer <b>100 %</b>. Von dort rechnen Sie auf <b>1 %</b> und dann auf die gesuchten Prozent. Das ist genau der 1-%-Trick aus dem Prozentrechnen.</div>
+   <div class="box bild"><div class="h">Beispiel rückwärts</div>36 € sind 12 %. Wie viel sind 100 %?<br>12 % sind 36 €. 1 % sind 36 : 12 = 3 €. 100 % sind 3 × 100 = <b>300 €</b>.</div>`,
+   ex:{ q:"Ein Gehalt beträgt 2.400 €. Davon gehen 25 % für die Miete weg. Wie viel Euro sind das?", steps:["Schritt 1. 100 % sind 2.400 €.","Schritt 2. Auf 1 %. 2.400 € : 100 = 24 €.","Schritt 3. Auf 25 %. 24 € × 25 = 600 €.","Die Miete ist <b>600 €</b>."]},
+   gen(){
+     if (Math.random()<.55){ const g = pick([200,250,300,400,500,800,1200,1500,2000,2400,3000]); const p = pick([3,5,8,12,15,19,25,30,40]); const w = g*p/100;
+       return { q:`100 % sind ${eur(g)}. Wie viel sind ${p} %?`, a:w, u:"€",
+         steps:[`Schritt 1. 100 % sind ${eur(g)}.`,`Schritt 2. Auf 1 %. ${eur(g)} : 100 = ${eur(g/100)}.`,`Schritt 3. Auf ${p} %. ${eur(g/100)} × ${p} = ${eur(w)}.`,`${p} % sind <b>${eur(w)}</b>.`]}; }
+     const one = pick([2,3,4,5,6,8,12,15,20]); const p = pick([4,5,8,10,12,15,20,25]); const w = one*p;
+     return { q:`${eur(w)} sind ${p} %. Wie viel sind 100 %?`, a:one*100, u:"€",
+       steps:[`Schritt 1. ${p} % sind ${eur(w)}.`,`Schritt 2. Auf 1 %. ${eur(w)} : ${p} = ${eur(one)}.`,`Schritt 3. Auf 100 %. ${eur(one)} × 100 = ${eur(one*100)}.`,`100 % sind <b>${eur(one*100)}</b>.`]};
+   }}
+ ]};
+
+/* ========== Ansichten ========== */
+const NQ = 5, NEED = 4;
+const app = $("#app");
+function upd(){ $("#xp").textContent = `⭐ ${S.xp} Punkte`; }
+function prog(k){ return S.p[k] || {}; }
+function unlocked(k,i){ return i===0 || (prog(k)[i-1]||0) > 0; }
+function starsHtml(n){ let h=""; for(let i=0;i<3;i++) h += i<n ? "★" : '<span class="off">★</span>'; return `<span class="stars">${h}</span>`; }
+function setBack(label, fn){ $("#backt").textContent = label; $("#back").onclick = fn; }
+
+function home(){
+  document.documentElement.style.setProperty("--c","#0077A6");
+  setBack("Zur Übersicht", () => location.href = "../index.html");
+  let h = `<h1>Kaufmännische Grundlagen</h1><p class="lead">Prozentrechnen und Dreisatz von Anfang an. Ganz einfach erklärt, Schritt für Schritt. Jedes Level schalten Sie mit 4 von 5 richtigen Aufgaben frei.</p><div class="tracks">`;
+  for (const k of Object.keys(T)){
+    const tr = T[k], p = prog(k), done = tr.levels.filter((_,i)=>p[i]>0).length;
+    h += `<div class="card track" style="--c:${tr.c}" onclick="location.hash='${k}'"><div class="emo">${tr.emo}</div><h2>${tr.name}</h2><p>${tr.desc}</p>
+      <div class="pbar"><i style="width:${Math.round(done/tr.levels.length*100)}%"></i></div><div class="pl"><span>${done} von ${tr.levels.length} Levels</span><span>${done===tr.levels.length?"Geschafft 🏆":"Weiter ➜"}</span></div></div>`;
+  }
+  h += `</div><div class="card"><b style="color:var(--navy)">So lernen Sie hier</b><ol style="margin:8px 0 0;padding-left:22px">
+    <li>Lesen Sie die kurze Erklärung.</li><li>Schauen Sie das Beispiel Schritt für Schritt an.</li><li>Rechnen Sie 5 Aufgaben. Bei einem Fehler bekommen Sie einen Tipp und einen zweiten Versuch.</li><li>Mit 4 richtigen Aufgaben gibt es Level up 🎉</li></ol>
+    <p class="small" style="margin-bottom:0">Ein Taschenrechner ist erlaubt. Kommazahlen schreiben Sie mit Komma, zum Beispiel 2,50.</p></div>`;
+  app.innerHTML = h; scrollTo(0,0);
+}
+
+function track(k){
+  const tr = T[k]; document.documentElement.style.setProperty("--c",tr.c);
+  setBack("Zurück", () => location.hash = "");
+  const p = prog(k);
+  let h = `<span class="badge">${tr.emo} ${tr.name}</span><h1>${tr.name}</h1><p class="lead">${tr.desc}</p>
+    <div class="tabs"><button class="on" id="tl">Levels</button><button id="ts">Merkzettel</button></div><div id="tv"></div>`;
+  app.innerHTML = h;
+  const lv = () => { let s = '<div class="path">';
+    tr.levels.forEach((L,i) => { const ok = unlocked(k,i), st = p[i]||0;
+      s += `<button class="lv ${ok?"":"locked"} ${st?"done":""}" ${ok?`onclick="location.hash='${k}/${i+1}'"`:"disabled"}><span class="n">${ok?(st?"✓":i+1):"🔒"}</span><span class="tx"><b>Level ${i+1}. ${L.t}</b><small>${L.s}</small></span>${st?starsHtml(st):(ok?'<span class="badge">Los</span>':"")}</button>`; });
+    $("#tv").innerHTML = s + "</div>"; };
+  $("#tl").onclick = () => { $("#tl").classList.add("on"); $("#ts").classList.remove("on"); lv(); };
+  $("#ts").onclick = () => { $("#ts").classList.add("on"); $("#tl").classList.remove("on"); $("#tv").innerHTML = `<div class="card sheet">${tr.sheet}</div>`; };
+  lv(); scrollTo(0,0);
+}
+
+function lesson(k,i){
+  const tr = T[k], L = tr.levels[i]; document.documentElement.style.setProperty("--c",tr.c);
+  if (!unlocked(k,i)) { location.hash = k; return; }
+  setBack("Alle Levels", () => location.hash = k);
+  app.innerHTML = `<span class="badge">${tr.name} · Level ${i+1} von ${tr.levels.length}</span><h1>${L.t}</h1>
+   <div class="card learn">${L.learn}</div>
+   <div class="card"><b style="color:var(--navy);font-size:18px">Beispiel Schritt für Schritt</b><p class="q" style="margin-top:8px">${L.ex.q}</p><ol class="steps" id="exs"></ol>
+   <div class="row"><button class="btn" id="nx">Ersten Schritt zeigen</button></div></div>`;
+  let sI = 0; const nx = $("#nx");
+  nx.onclick = () => {
+    if (sI < L.ex.steps.length){ $("#exs").insertAdjacentHTML("beforeend", `<li>${L.ex.steps[sI]}</li>`); sI++;
+      nx.textContent = sI < L.ex.steps.length ? "Nächster Schritt" : "Verstanden. Jetzt selbst üben ➜"; }
+    else practice(k,i);
+  };
+  scrollTo(0,0);
+}
+
+function practice(k,i){
+  const tr = T[k], L = tr.levels[i];
+  setBack("Zur Erklärung", () => lesson(k,i));
+  const tasks = []; const seen = new Set();
+  for (let t=0; t<40 && tasks.length<NQ; t++){ const x = L.gen(); if (!seen.has(x.q)){ seen.add(x.q); tasks.push(x); } }
+  while (tasks.length < NQ) tasks.push(L.gen());
+  const res = []; let n = 0;
+  const show = () => {
+    const x = tasks[n]; let tries = 0, sel = null;
+    let dots = '<div class="dots">'; for (let j=0;j<NQ;j++) dots += `<i class="${j<n?(res[j]?"ok":"no"):(j===n?"cur":"")}"></i>`; dots += "</div>";
+    const inp = x.choices ? `<div class="ch" id="ch">${x.choices.map((c,ci)=>`<button data-i="${ci}">${c}</button>`).join("")}</div>`
+      : `<div class="ans"><input id="in" inputmode="decimal" autocomplete="off" placeholder="Ihre Lösung"><span class="u">${x.u||""}</span></div>`;
+    app.innerHTML = `<span class="badge">${tr.name} · Level ${i+1}</span><h1 style="font-size:22px">Aufgabe ${n+1} von ${NQ}</h1>${dots}
+      <div class="card"><div class="q">${x.q}</div>${inp}<div id="fb"></div>
+      <div class="row"><button class="btn" id="ok">Prüfen</button><button class="btn ghost" id="hl">Tipp</button></div></div>`;
+    const ok = $("#ok"), fb = $("#fb");
+    if (x.choices){ $("#ch").onclick = e => { const b = e.target.closest("button"); if (!b || b.disabled) return; document.querySelectorAll("#ch button").forEach(z=>z.classList.remove("sel")); b.classList.add("sel"); sel = +b.dataset.i; }; }
+    else { const el = $("#in"); el.focus({preventScroll:true}); el.onkeydown = e => { if (e.key==="Enter") ok.click(); }; }
+    const stepsHtml = `<ol>${x.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`;
+    $("#hl").onclick = () => { fb.innerHTML = `<div class="fb hint"><b class="t">💡 Tipp</b>${x.steps[0]}</div>`; };
+    const finish = good => {
+      res[n] = good; if (good) { S.xp += tries===0 ? 10 : 5; save(); upd(); }
+      if (x.choices) document.querySelectorAll("#ch button").forEach(b => { b.disabled = true; if (+b.dataset.i===x.a) b.classList.add("good"); else if (+b.dataset.i===sel) b.classList.add("wrong"); });
+      else $("#in").disabled = true;
+      $("#hl").remove();
+      ok.textContent = n < NQ-1 ? "Nächste Aufgabe ➜" : "Ergebnis ansehen ➜";
+      ok.onclick = () => { n++; n < NQ ? show() : result(k,i,res); };
+      ok.focus();
+    };
+    ok.onclick = () => {
+      let good;
+      if (x.choices){ if (sel===null){ fb.innerHTML = `<div class="fb hint"><b class="t">Bitte wählen</b>Klicken Sie auf eine Antwort.</div>`; return; } good = sel===x.a; }
+      else { const v = parseNum($("#in").value); if (isNaN(v)){ fb.innerHTML = `<div class="fb hint"><b class="t">Bitte eine Zahl eingeben</b>Zum Beispiel 25 oder 2,50.</div>`; return; } good = Math.abs(v - x.a) < 0.011; }
+      if (good){ fb.innerHTML = `<div class="fb ok"><b class="t">✓ Richtig${tries?" im zweiten Versuch":""}. Super!</b>So geht der Weg.${stepsHtml}</div>`; finish(true); return; }
+      tries++;
+      if (tries===1 && (!x.choices || x.choices.length>2)){
+        fb.innerHTML = `<div class="fb hint"><b class="t">Noch nicht ganz. Versuchen Sie es noch einmal.</b>💡 ${x.steps[0]}</div>`;
+        if (x.choices){ const b = document.querySelector(`#ch button[data-i="${sel}"]`); if (b){ b.classList.add("wrong"); b.disabled = true; } sel = null; }
+        else { const el = $("#in"); el.select(); }
+        return;
+      }
+      const rt = x.choices ? x.choices[x.a] : `${z(x.a)} ${x.u||""}`;
+      fb.innerHTML = `<div class="fb no"><b class="t">Leider nicht richtig</b>Die richtige Lösung ist <b>${rt}</b>. So kommen Sie dahin.${stepsHtml}</div>`;
+      finish(false);
+    };
+  };
+  show();
+}
+
+function result(k,i,res){
+  const tr = T[k], good = res.filter(Boolean).length, pass = good >= NEED, st = good===NQ ? 3 : good>=NEED ? 2 : 0;
+  const p = S.p[k] = S.p[k] || {}; const first = pass && !(p[i]>0);
+  if (pass){ p[i] = Math.max(p[i]||0, st); if (first) S.xp += 20; save(); upd(); }
+  const last = i === tr.levels.length-1;
+  setBack("Alle Levels", () => location.hash = k);
+  app.innerHTML = `<div class="card res">${pass?`<div class="lvup">LEVEL UP</div><div class="big" style="margin-top:14px">${last?"🏆":"🎉"}</div><h2>${last?"Alle Levels geschafft!":"Level "+(i+1)+" geschafft!"}</h2>${starsHtml(st)}`
+    : `<div class="big">💪</div><h2>Fast geschafft!</h2>`}
+    <p>Sie haben <b>${good} von ${NQ}</b> Aufgaben richtig.${pass?(first?" Dafür gibt es 20 Extrapunkte.":""):` Für das nächste Level brauchen Sie ${NEED} richtige. Lesen Sie die Erklärung noch einmal in Ruhe. Die Zahlen sind beim nächsten Versuch neu.`}</p>
+    <div class="row" style="justify-content:center">
+      ${pass && !last ? `<button class="btn" onclick="location.hash='${k}/${i+2}'">Weiter zu Level ${i+2} ➜</button>` : ""}
+      ${pass && last ? `<button class="btn" onclick="location.hash='${k==="prozent"?"dreisatz":"prozent"}'">${k==="prozent"?"Zum Dreisatz":"Zum Prozentrechnen"} ➜</button>` : ""}
+      ${!pass ? `<button class="btn" id="again">Noch einmal üben</button><button class="btn ghost" onclick="lesson('${k}',${i})">Erklärung lesen</button>` : `<button class="btn ghost" id="again">Noch einmal üben</button>`}
+    </div></div>`;
+  const ag = $("#again"); if (ag) ag.onclick = () => practice(k,i);
+  if (pass) confetti();
+  scrollTo(0,0);
+}
+
+function confetti(){
+  const c = document.createElement("div"); c.className = "conf"; const cols = ["#0077A6","#e0a100","#1d8a6b","#7048b0","#ff7a59","#003366"];
+  for (let j=0;j<70;j++){ const i = document.createElement("i"); i.style.left = Math.random()*100+"vw"; i.style.background = pick(cols);
+    i.style.animationDuration = (1.6+Math.random()*1.8)+"s"; i.style.animationDelay = Math.random()*.6+"s"; i.style.transform = `rotate(${ri(0,180)}deg)`; c.appendChild(i); }
+  document.body.appendChild(c); setTimeout(() => c.remove(), 4200);
+}
+
+function route(){
+  const h = location.hash.replace(/^#/,""); const [k, l] = h.split("/");
+  if (T[k] && l && +l>=1 && +l<=T[k].levels.length) lesson(k, +l-1);
+  else if (T[k]) track(k);
+  else home();
+}
+window.addEventListener("hashchange", route);
+upd(); route();
+</script>
+</body></html>
