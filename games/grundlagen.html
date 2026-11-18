@@ -23,7 +23,7 @@ a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
 h1{margin:6px 0 4px;font-size:28px;line-height:1.2;font-weight:800;color:var(--navy)}
 .lead{color:var(--muted);margin:0 0 18px}
 .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
-.tracks{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .track{border-top:5px solid var(--c);cursor:pointer;transition:transform .15s,box-shadow .15s}
 .track:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(16,40,64,.08),0 14px 30px rgba(16,40,64,.12)}
 .track h2{margin:4px 0 6px;font-size:21px;color:var(--navy)}.track p{margin:0 0 14px;color:var(--muted);font-size:15px}
@@ -87,7 +87,14 @@ h1{margin:6px 0 4px;font-size:28px;line-height:1.2;font-weight:800;color:var(--n
 .tabs button{border:0;background:none;padding:8px 14px;border-radius:9px;font-weight:700;font-size:14px;color:var(--muted)}.tabs button.on{background:var(--navy);color:#fff}
 .foot{margin-top:30px;text-align:center;color:var(--muted);font-size:12px}
 .small{font-size:14px;color:var(--muted)}
-@media (max-width:700px){.tracks{grid-template-columns:1fr}h1{font-size:24px}.q{font-size:18px}.card{padding:16px}.btn{padding:12px 16px}}
+.hk{border-collapse:collapse;width:100%;max-width:620px;font-size:15px;margin:10px 0}
+.hk td{padding:6px 10px;border-bottom:1px solid var(--line)}.hk .op{width:24px;font-weight:800;color:var(--c);text-align:center}
+.hk .nm{font-weight:700;color:var(--navy)}.hk .ds{color:var(--muted);font-size:13px}
+.hk tr.sum td{background:#f7fafc}.hk tr.sum .nm{font-weight:800}
+.hk tr.grp td{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:12px;border-bottom:2px solid var(--line)}
+.hk tr.hl td{background:color-mix(in srgb,var(--c) 14%,#fff)}.hk tr.dim td{opacity:.45}
+.dt.calc td{padding:7px 10px}.dt.calc tr.sum td{border-top:2px solid var(--navy);font-weight:800}.dt.calc td.op{font-size:13px;color:var(--muted);font-weight:600}.dt.calc td.op:first-child{color:var(--c);font-size:17px;font-weight:800}
+@media (max-width:700px){.hk .ds{display:none}.dt.calc td.op:last-child{display:none}.dt.calc td.r{white-space:nowrap}.dt.calc,.dt{font-size:15px}.dt td{padding:7px 8px}.tracks{grid-template-columns:1fr}h1{font-size:24px}.q{font-size:18px}.card{padding:16px}.btn{padding:12px 16px}}
 </style></head><body>
 <div class="bar"><div class="bar-in">
   <button class="back" id="back"><svg class="ico" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span id="backt">Zur Übersicht</span></button>
@@ -118,7 +125,9 @@ function parseNum(s){
   return parseFloat(s);
 }
 function grid(k){ let h='<div class="grid100">'; for(let i=0;i<100;i++) h+=`<i class="${i<k?"on":""}"></i>`; return h+'</div>'; }
+const nb = x => String(x).replace(/ (€|%)/g,"&nbsp;$1");
 function dtab(rows){ /* rows [ [links, rechts, op] ] */
+  rows = rows.map(r => r.map(nb));
   return '<table class="dt">'+rows.map(r=>`<tr><td class="l">${r[0]}</td><td>➜</td><td class="r">${r[1]}</td><td class="op">${r[2]||""}</td></tr>`).join("")+'</table>';
 }
 const KEY = "kba015_kg";
@@ -415,26 +424,188 @@ T.dreisatz = { name:"Dreisatz", emo:"🔺", c:"#7048b0",
    }}
  ]};
 
+/* ---------- HANDELSKALKULATION ---------- */
+const HK_ROWS = [
+ ["","Listeneinkaufspreis","der Preis in der Liste vom Lieferer","e"],
+ ["−","Liefererrabatt","Nachlass vom Lieferer","e"],
+ ["=","Zieleinkaufspreis","","e"],
+ ["−","Liefererskonto","Nachlass für schnelles Bezahlen","e"],
+ ["=","Bareinkaufspreis","","e"],
+ ["+","Bezugskosten","Fracht, Porto, Verpackung","e"],
+ ["=","Bezugspreis","so viel kostet uns die Ware","e"],
+ ["+","Handlungskosten","Miete, Löhne, Strom im eigenen Betrieb","v"],
+ ["=","Selbstkostenpreis","","v"],
+ ["+","Gewinn","das wollen wir verdienen","v"],
+ ["=","Barverkaufspreis","","v"],
+ ["+","Kundenskonto","im Hundert rechnen","v"],
+ ["=","Zielverkaufspreis","","v"],
+ ["+","Kundenrabatt","im Hundert rechnen","v"],
+ ["=","Listenverkaufspreis netto","","v"],
+ ["+","Umsatzsteuer 19 %","","v"],
+ ["=","Listenverkaufspreis brutto","","v"]];
+function schema(hl){ hl = hl || [];
+  let h = '<table class="hk">';
+  HK_ROWS.forEach((r,i) => {
+    if (i===0) h += '<tr class="grp"><td colspan="3">Einkauf (Bezugskalkulation)</td></tr>';
+    if (i===7) h += '<tr class="grp"><td colspan="3">Verkauf (Verkaufskalkulation)</td></tr>';
+    h += `<tr class="${r[0]==="="?"sum":""} ${hl.includes(i)?"hl":""} ${hl.length&&!hl.includes(i)?"dim":""}"><td class="op">${r[0]}</td><td class="nm">${r[1]}</td><td class="ds">${r[2]}</td></tr>`;
+  });
+  return h + '</table>';
+}
+function ctab(rows){ rows = rows.map(r => r.map(nb)); return '<table class="dt calc">'+rows.map(r=>`<tr class="${r[0]==="="?"sum":""}"><td class="op">${r[0]}</td><td class="l" style="text-align:left">${r[1]}</td><td class="r" style="text-align:right">${r[2]}</td><td class="op">${r[3]||""}</td></tr>`).join("")+'</table>'; }
+const WARE = ["einen Bürostuhl","einen Schreibtisch","einen Aktenschrank","ein Regal","einen Drucker","einen Monitor","ein Sideboard"];
+T.handel = { name:"Handelskalkulation", emo:"🛒", c:"#1d8a6b",
+ desc:"Vom Einkaufspreis beim Lieferer bis zum Verkaufspreis für den Kunden.",
+ sheet:`${schema()}
+ <table style="margin-top:14px"><tr><th>Schritt</th><th>So rechnen</th></tr>
+ <tr><td><b>Rabatt, Skonto beim Einkauf</b></td><td>Prozent vom Preis darüber, dann <b>minus</b></td></tr>
+ <tr><td><b>Bezugskosten</b></td><td>Betrag in Euro, <b>plus</b></td></tr>
+ <tr><td><b>Handlungskosten, Gewinn</b></td><td>Prozent vom Preis darüber, dann <b>plus</b></td></tr>
+ <tr><td><b>Kundenskonto, Kundenrabatt</b></td><td><b>im Hundert</b>. Preis darüber ist 100 % minus Skonto oder Rabatt. Dann auf 1 % und auf 100 % rechnen.</td></tr>
+ </table><p class="small">Eselsbrücke. Beim Einkauf geht es bergab, wir ziehen ab. Beim Verkauf geht es bergauf, wir rechnen dazu.</p>`,
+ levels:[
+ { t:"Das Schema verstehen", s:"Welcher Preis kommt wann?",
+   learn:`<p>Ein Händler kauft Ware beim <b>Lieferer</b> ein und verkauft sie an <b>Kunden</b> weiter. Die Handelskalkulation zeigt, wie man vom Einkaufspreis zum Verkaufspreis kommt.</p>
+   <div class="box bild"><div class="h">Bild im Kopf</div>Die Nordholz Büromöbel GmbH kauft einen Stuhl ein. Erst wird der Einkauf günstiger, weil es Rabatt und Skonto gibt. Dann kommen Kosten dazu, zum Beispiel für die Lieferung. Am Ende wollen wir etwas verdienen. Also kommt noch Gewinn dazu.</div>
+   <p>Das ganze Schema sieht so aus. Sie müssen es noch nicht können. Wir lernen es Stufe für Stufe.</p>${schema()}
+   <div class="box tipp"><div class="h">Eselsbrücke</div>Beim <b>Einkauf</b> geht es <b>bergab</b>. Wir ziehen ab.<br>Beim <b>Verkauf</b> geht es <b>bergauf</b>. Wir rechnen dazu.</div>`,
+   ex:{ q:"Was sind Bezugskosten?", steps:["Bezugskosten entstehen, wenn die Ware zu uns kommt.","Zum Beispiel Fracht, Porto oder Verpackung.","Bezugskosten sind also <b>Kosten für den Transport der Ware zu uns</b>. Sie kommen beim Einkauf dazu."]},
+   gen(){
+     const pool = [
+      ["Was ist ein Rabatt?",["ein Preisnachlass, zum Beispiel für große Mengen","eine Steuer auf den Preis","die Kosten für die Lieferung"],0,"Rabatt ist ein Nachlass. Man bekommt ihn zum Beispiel, weil man viel kauft oder ein guter Kunde ist."],
+      ["Was ist Skonto?",["ein Nachlass, wenn man schnell bezahlt","der Gewinn des Händlers","die Miete für das Lager"],0,"Skonto bekommt man, wenn man eine Rechnung schnell bezahlt, zum Beispiel in 10 Tagen."],
+      ["Was sind Handlungskosten?",["Kosten im eigenen Betrieb wie Miete, Löhne und Strom","der Preis in der Liste vom Lieferer","ein Nachlass für den Kunden"],0,"Handlungskosten sind die Kosten, die der eigene Betrieb hat. Zum Beispiel Miete, Löhne und Strom."],
+      ["Was sind Bezugskosten?",["Kosten für den Transport der Ware zu uns","der Gewinn des Händlers","ein Nachlass vom Lieferer"],0,"Bezugskosten sind Kosten, damit die Ware zu uns kommt. Zum Beispiel Fracht, Porto und Verpackung."],
+      ["Welcher Preis steht ganz oben im Schema?",["der Listeneinkaufspreis","der Selbstkostenpreis","der Barverkaufspreis"],0,"Wir starten immer mit dem Preis in der Liste vom Lieferer. Das ist der Listeneinkaufspreis."],
+      ["Welcher Preis kommt heraus, wenn man vom Listeneinkaufspreis den Liefererrabatt abzieht?",["der Zieleinkaufspreis","der Bezugspreis","der Listenverkaufspreis"],0,"Listeneinkaufspreis minus Liefererrabatt ergibt den Zieleinkaufspreis."],
+      ["Wie heißt der Preis, den uns die Ware am Ende des Einkaufs kostet?",["der Bezugspreis","der Zieleinkaufspreis","der Barverkaufspreis"],0,"Nach Rabatt, Skonto und Bezugskosten haben wir den Bezugspreis. So viel kostet uns die Ware wirklich."],
+      ["Was kommt zum Selbstkostenpreis dazu, damit wir etwas verdienen?",["der Gewinn","der Liefererrabatt","das Liefererskonto"],0,"Zum Selbstkostenpreis kommt der Gewinn. Dann haben wir den Barverkaufspreis."],
+      ["Wird beim Einkauf eher abgezogen oder dazugerechnet?",["Zuerst wird abgezogen, Rabatt und Skonto. Nur die Bezugskosten kommen dazu.","Es wird nur dazugerechnet.","Es wird gar nicht gerechnet."],0,"Beim Einkauf ziehen wir Rabatt und Skonto ab. Nur die Bezugskosten kommen dazu."],
+      ["Was ist der Selbstkostenpreis?",["Bezugspreis plus Handlungskosten","Listeneinkaufspreis minus Rabatt","Barverkaufspreis plus Skonto"],0,"Selbstkostenpreis heißt, so viel kostet uns die Ware mit allen eigenen Kosten. Also Bezugspreis plus Handlungskosten."]];
+     const [q,opts,a,why] = pick(pool); const order = shuffle([0,1,2]);
+     return { q, choices:order.map(o=>opts[o]), a:order.indexOf(a), steps:[why]};
+   }},
+ { t:"Rabatt beim Einkauf", s:"Zum Zieleinkaufspreis",
+   learn:`<p>Wir beginnen oben im Schema. Der Lieferer hat eine Preisliste. Dort steht der <b>Listeneinkaufspreis</b>. Oft bekommen wir <b>Rabatt</b>.</p>${schema([0,1,2])}
+   <div class="box merke"><div class="h">So geht es</div><b>Schritt 1.</b> Rabatt ausrechnen. Prozent vom Listeneinkaufspreis.<br><b>Schritt 2.</b> Rabatt abziehen, also <b>minus</b>.</div>
+   ${ctab([["","Listeneinkaufspreis","500,00 €",""],["−","Liefererrabatt 10 %","50,00 €","10 % von 500 €"],["=","Zieleinkaufspreis","450,00 €",""]])}
+   <div class="box tipp"><div class="h">Warum Ziel?</div>Ziel heißt hier Zahlungsfrist. Diesen Preis zahlen wir, wenn wir uns Zeit lassen, zum Beispiel 30 Tage.</div>`,
+   ex:{ q:"Der Listeneinkaufspreis für einen Schreibtisch ist 800 €. Der Lieferer gibt 20 % Rabatt. Wie hoch ist der Zieleinkaufspreis?", steps:["Schritt 1. Rabatt ausrechnen. 1 % von 800 € = 8 €. Mal 20 = 160 €.","Schritt 2. Rabatt abziehen. 800 € minus 160 € = 640 €.","Der Zieleinkaufspreis ist <b>640 €</b>."]},
+   gen(){
+     const l = pick([200,300,400,500,600,800,1000,1200,1500,2000,250,750]); const r = pick([5,10,15,20,25,30]); const ra = l*r/100;
+     return { q:`Der Listeneinkaufspreis für ${pick(WARE)} ist ${eur(l)}. Der Lieferer gibt ${r} % Rabatt. Wie hoch ist der Zieleinkaufspreis?`, a:l-ra, u:"€",
+       steps:[`Schritt 1. Rabatt ausrechnen. 1 % von ${eur(l)} = ${eur(l/100)}. Mal ${r} = ${eur(ra)}.`,`Schritt 2. Rabatt abziehen. ${eur(l)} minus ${eur(ra)} = ${eur(l-ra)}.`,`Der Zieleinkaufspreis ist <b>${eur(l-ra)}</b>.`]};
+   }},
+ { t:"Skonto beim Einkauf", s:"Zum Bareinkaufspreis",
+   learn:`<p>Zahlen wir schnell, gibt es noch <b>Skonto</b>. Das ist meistens 2 % oder 3 %.</p>${schema([2,3,4])}
+   <div class="box acht"><div class="h">Achtung</div>Das Skonto rechnen Sie vom <b>Zieleinkaufspreis</b>. Nicht vom Listeneinkaufspreis. Immer vom Preis direkt darüber.</div>
+   ${ctab([["","Zieleinkaufspreis","450,00 €",""],["−","Liefererskonto 2 %","9,00 €","2 % von 450 €"],["=","Bareinkaufspreis","441,00 €",""]])}
+   <div class="box bild"><div class="h">Bild im Kopf</div>Bar heißt hier sofort. Wer sofort zahlt, zahlt weniger.</div>`,
+   ex:{ q:"Der Zieleinkaufspreis ist 640 €. Der Lieferer gibt 3 % Skonto. Wie hoch ist der Bareinkaufspreis?", steps:["Schritt 1. Skonto ausrechnen. 1 % von 640 € = 6,40 €. Mal 3 = 19,20 €.","Schritt 2. Skonto abziehen. 640 € minus 19,20 € = 620,80 €.","Der Bareinkaufspreis ist <b>620,80 €</b>."]},
+   gen(){
+     const s = pick([2,3]);
+     if (Math.random()<.5){ const zp = pick([300,400,450,500,640,720,800,900,1000,1200,1500]); const sk = zp*s/100;
+       return { q:`Der Zieleinkaufspreis ist ${eur(zp)}. Der Lieferer gibt ${s} % Skonto. Wie hoch ist der Bareinkaufspreis?`, a:zp-sk, u:"€",
+         steps:[`Schritt 1. Skonto ausrechnen. 1 % von ${eur(zp)} = ${eur(zp/100)}. Mal ${s} = ${eur(sk)}.`,`Schritt 2. Skonto abziehen. ${eur(zp)} minus ${eur(sk)} = ${eur(zp-sk)}.`,`Der Bareinkaufspreis ist <b>${eur(zp-sk)}</b>.`]}; }
+     const l = pick([400,500,600,800,1000,1200,2000]); const r = pick([10,20,25]); const zp = l*(100-r)/100, sk = r2(zp*s/100);
+     return { q:`Ein Listeneinkaufspreis ist ${eur(l)}. Es gibt ${r} % Rabatt und ${s} % Skonto. Wie hoch ist der Bareinkaufspreis?`, a:zp-sk, u:"€",
+       steps:[`Schritt 1. Rabatt. ${r} % von ${eur(l)} = ${eur(l*r/100)}. ${eur(l)} minus ${eur(l*r/100)} = ${eur(zp)}. Das ist der Zieleinkaufspreis.`,`Schritt 2. Skonto vom Zieleinkaufspreis. ${s} % von ${eur(zp)} = ${eur(sk)}.`,`Schritt 3. ${eur(zp)} minus ${eur(sk)} = ${eur(zp-sk)}.`,`Der Bareinkaufspreis ist <b>${eur(zp-sk)}</b>.`]};
+   }},
+ { t:"Bezugskosten", s:"Zum Bezugspreis",
+   learn:`<p>Die Ware muss noch zu uns kommen. Dafür bezahlen wir <b>Bezugskosten</b>, zum Beispiel Fracht oder Verpackung. Die stehen meistens schon in <b>Euro</b> da.</p>${schema([4,5,6])}
+   <div class="box merke"><div class="h">Merke</div>Bezugskosten kommen <b>dazu</b>, also plus. Hier müssen Sie keine Prozent rechnen.</div>
+   ${ctab([["","Listeneinkaufspreis","500,00 €",""],["−","Liefererrabatt 10 %","50,00 €",""],["=","Zieleinkaufspreis","450,00 €",""],["−","Liefererskonto 2 %","9,00 €",""],["=","Bareinkaufspreis","441,00 €",""],["+","Bezugskosten","24,00 €",""],["=","Bezugspreis","465,00 €",""]])}
+   <p>Damit ist der <b>Einkauf fertig</b>. Der Bezugspreis heißt auch <b>Einstandspreis</b>.</p>`,
+   ex:{ q:"Der Bareinkaufspreis ist 620,80 €. Für die Fracht zahlen wir 29,20 €. Wie hoch ist der Bezugspreis?", steps:["Bezugskosten kommen dazu, also plus.","620,80 € + 29,20 € = 650 €.","Der Bezugspreis ist <b>650 €</b>."]},
+   gen(){
+     const bk = pick([12,15,18,20,24,25,30,35,40,45,50,12.5]);
+     if (Math.random()<.4){ const be = pick([441,588,620.8,735,784,970,1176]);
+       return { q:`Der Bareinkaufspreis ist ${eur(be)}. Für Fracht und Verpackung zahlen wir ${eur(bk)}. Wie hoch ist der Bezugspreis?`, a:be+bk, u:"€",
+         steps:["Bezugskosten kommen dazu, also plus.",`${eur(be)} + ${eur(bk)} = ${eur(be+bk)}.`,`Der Bezugspreis ist <b>${eur(be+bk)}</b>.`]}; }
+     const l = pick([400,500,600,800,1000,1200,1500,2000]); const r = pick([10,20,25]); const s = pick([2,3]);
+     const ra = l*r/100, zp = l-ra, sk = r2(zp*s/100), be = r2(zp-sk), bz = r2(be+bk);
+     return { q:`${pick(["Ein Aktenschrank","Ein Schreibtisch","Ein Bürostuhl","Ein Regal"])} hat einen Listeneinkaufspreis von ${eur(l)}. Es gibt ${r} % Rabatt und ${s} % Skonto. Die Fracht kostet ${eur(bk)}. Wie hoch ist der Bezugspreis?`, a:bz, u:"€",
+       steps:[`Rabatt. ${r} % von ${eur(l)} = ${eur(ra)}. ${eur(l)} minus ${eur(ra)} = ${eur(zp)} Zieleinkaufspreis.`,`Skonto. ${s} % von ${eur(zp)} = ${eur(sk)}. ${eur(zp)} minus ${eur(sk)} = ${eur(be)} Bareinkaufspreis.`,`Bezugskosten dazu. ${eur(be)} + ${eur(bk)} = ${eur(bz)}.`,`Der Bezugspreis ist <b>${eur(bz)}</b>.`]};
+   }},
+ { t:"Handlungskosten", s:"Zum Selbstkostenpreis",
+   learn:`<p>Jetzt beginnt der <b>Verkauf</b>. Unser Betrieb hat auch eigene Kosten. Miete für das Lager, Löhne, Strom, Telefon. Das sind die <b>Handlungskosten</b>.</p>${schema([6,7,8])}
+   <div class="box merke"><div class="h">So geht es</div>Die Handlungskosten stehen als <b>Prozent</b> da. Man sagt auch Handlungskostenzuschlag.<br><b>Schritt 1.</b> Prozent vom <b>Bezugspreis</b> ausrechnen.<br><b>Schritt 2.</b> Dazu, also <b>plus</b>.</div>
+   ${ctab([["","Bezugspreis","400,00 €",""],["+","Handlungskosten 25 %","100,00 €","25 % von 400 €"],["=","Selbstkostenpreis","500,00 €",""]])}
+   <div class="box bild"><div class="h">Bild im Kopf</div>Selbstkosten heißt, so viel kostet uns die Ware <b>selbst</b>, mit allem. Verkaufen wir genau zu diesem Preis, verdienen wir noch nichts.</div>`,
+   ex:{ q:"Der Bezugspreis ist 650 €. Die Handlungskosten sind 20 %. Wie hoch ist der Selbstkostenpreis?", steps:["Schritt 1. 1 % von 650 € = 6,50 €. Mal 20 = 130 €.","Schritt 2. Dazu, also plus. 650 € + 130 € = 780 €.","Der Selbstkostenpreis ist <b>780 €</b>."]},
+   gen(){
+     const bz = pick([200,300,400,465,500,600,650,750,800,1000,1200]); const h = pick([15,20,25,30,40,50]); const hk = bz*h/100;
+     return { q:`Der Bezugspreis für ${pick(WARE)} ist ${eur(bz)}. Die Handlungskosten betragen ${h} %. Wie hoch ist der Selbstkostenpreis?`, a:bz+hk, u:"€",
+       steps:[`Schritt 1. 1 % von ${eur(bz)} = ${eur(bz/100)}. Mal ${h} = ${eur(hk)}.`,`Schritt 2. Dazu, also plus. ${eur(bz)} + ${eur(hk)} = ${eur(bz+hk)}.`,`Der Selbstkostenpreis ist <b>${eur(bz+hk)}</b>.`]};
+   }},
+ { t:"Gewinn", s:"Zum Barverkaufspreis",
+   learn:`<p>Wir wollen etwas verdienen. Deshalb kommt der <b>Gewinn</b> dazu. Er steht als Prozent da.</p>${schema([8,9,10])}
+   <div class="box merke"><div class="h">So geht es</div><b>Schritt 1.</b> Prozent vom <b>Selbstkostenpreis</b> ausrechnen.<br><b>Schritt 2.</b> Dazu, also <b>plus</b>.</div>
+   ${ctab([["","Selbstkostenpreis","500,00 €",""],["+","Gewinn 10 %","50,00 €","10 % von 500 €"],["=","Barverkaufspreis","550,00 €",""]])}
+   <div class="box tipp"><div class="h">Gleicher Trick wie vorher</div>Handlungskosten und Gewinn rechnen Sie genau gleich. Prozent vom Preis darüber, dann plus.</div>`,
+   ex:{ q:"Der Selbstkostenpreis ist 780 €. Wir wollen 15 % Gewinn. Wie hoch ist der Barverkaufspreis?", steps:["Schritt 1. 1 % von 780 € = 7,80 €. Mal 15 = 117 €.","Schritt 2. Dazu, also plus. 780 € + 117 € = 897 €.","Der Barverkaufspreis ist <b>897 €</b>."]},
+   gen(){
+     const g = pick([5,10,12,15,20,25]);
+     if (Math.random()<.5){ const sk = pick([300,400,500,600,780,800,900,1000,1250]); const gw = sk*g/100;
+       return { q:`Der Selbstkostenpreis ist ${eur(sk)}. Wir wollen ${g} % Gewinn. Wie hoch ist der Barverkaufspreis?`, a:sk+gw, u:"€",
+         steps:[`Schritt 1. 1 % von ${eur(sk)} = ${eur(sk/100)}. Mal ${g} = ${eur(gw)}.`,`Schritt 2. Dazu, also plus. ${eur(sk)} + ${eur(gw)} = ${eur(sk+gw)}.`,`Der Barverkaufspreis ist <b>${eur(sk+gw)}</b>.`]}; }
+     const bz = pick([200,400,500,600,800,1000]); const h = pick([20,25,30,40,50]); const hk = bz*h/100, sk = bz+hk, gw = r2(sk*g/100);
+     return { q:`Der Bezugspreis ist ${eur(bz)}. Die Handlungskosten sind ${h} %. Der Gewinn soll ${g} % sein. Wie hoch ist der Barverkaufspreis?`, a:sk+gw, u:"€",
+       steps:[`Handlungskosten. ${h} % von ${eur(bz)} = ${eur(hk)}. ${eur(bz)} + ${eur(hk)} = ${eur(sk)} Selbstkostenpreis.`,`Gewinn. ${g} % von ${eur(sk)} = ${eur(gw)}.`,`${eur(sk)} + ${eur(gw)} = ${eur(sk+gw)}.`,`Der Barverkaufspreis ist <b>${eur(sk+gw)}</b>.`]};
+   }},
+ { t:"Kundenskonto und Kundenrabatt", s:"Im Hundert rechnen",
+   learn:`<p>Jetzt kommt der schwerste Teil. Auch unser <b>Kunde</b> bekommt später Skonto und Rabatt. Die müssen wir vorher in den Preis einbauen.</p>${schema([10,11,12,13,14])}
+   <div class="box acht"><div class="h">Achtung Falle</div>Der Kunde zieht das Skonto später vom <b>größeren Preis</b> ab, also vom Zielverkaufspreis. Deshalb ist der Barverkaufspreis <b>nicht 100 %</b>. Bei 2 % Skonto ist er nur <b>98 %</b>.<br>Falsch ist, einfach 2 % vom Barverkaufspreis dazuzurechnen.</div>
+   <div class="box merke"><div class="h">Im Hundert in 3 Schritten</div><b>Schritt 1.</b> Der Preis, den Sie haben, ist 100 % minus Skonto. Zum Beispiel 98 %.<br><b>Schritt 2.</b> Auf 1 %. Teilen durch 98.<br><b>Schritt 3.</b> Auf 100 %. Mal 100.</div>
+   ${dtab([["98 %","980 €","Barverkaufspreis"],["1 %","10 €",": 98"],["100 %","1.000 €","× 100"]])}
+   <div class="box tipp"><div class="h">Probe</div>Der Kunde zahlt 1.000 € minus 2 % Skonto. 2 % von 1.000 € sind 20 €. Er zahlt 980 €. Genau unser Barverkaufspreis. Es stimmt!</div>
+   <p>Mit dem <b>Kundenrabatt</b> machen Sie es genauso. Nur starten Sie beim Zielverkaufspreis.</p>`,
+   ex:{ q:"Der Barverkaufspreis ist 970 €. Der Kunde bekommt 3 % Skonto. Wie hoch ist der Zielverkaufspreis?", steps:["Der Barverkaufspreis ist 100 % minus 3 %, also 97 %.","Schritt 1. 97 % sind 970 €.","Schritt 2. Auf 1 %. 970 € : 97 = 10 €.","Schritt 3. Auf 100 %. 10 € × 100 = 1.000 €.","Der Zielverkaufspreis ist <b>1.000 €</b>. Probe 1.000 € minus 3 % = 970 €."]},
+   gen(){
+     if (Math.random()<.5){ const s = pick([2,3]); const zv = pick([500,600,800,1000,1200,1500,2000,2500,750]); const bv = zv*(100-s)/100;
+       return { q:`Der Barverkaufspreis ist ${eur(bv)}. Der Kunde bekommt ${s} % Skonto. Wie hoch ist der Zielverkaufspreis?`, a:zv, u:"€",
+         steps:[`Der Barverkaufspreis ist 100 % minus ${s} %, also ${100-s} %.`,`Schritt 2. Auf 1 %. ${eur(bv)} : ${100-s} = ${eur(zv/100)}.`,`Schritt 3. Auf 100 %. ${eur(zv/100)} × 100 = ${eur(zv)}.`,`Der Zielverkaufspreis ist <b>${eur(zv)}</b>.`]}; }
+     const r = pick([5,10,20,25]); const lv = pick([400,500,600,800,1000,1200,1500,2000]); const zv = lv*(100-r)/100;
+     return { q:`Der Zielverkaufspreis ist ${eur(zv)}. Der Kunde bekommt ${r} % Rabatt. Wie hoch ist der Listenverkaufspreis?`, a:lv, u:"€",
+       steps:[`Der Zielverkaufspreis ist 100 % minus ${r} %, also ${100-r} %.`,`Schritt 2. Auf 1 %. ${eur(zv)} : ${100-r} = ${eur(lv/100)}.`,`Schritt 3. Auf 100 %. ${eur(lv/100)} × 100 = ${eur(lv)}.`,`Der Listenverkaufspreis ist <b>${eur(lv)}</b>.`]};
+   }},
+ { t:"Die ganze Kalkulation", s:"Prüfungsniveau",
+   learn:`<p>Jetzt rechnen Sie den ganzen Verkauf am Stück. Sie kennen jeden Schritt schon. Gehen Sie einfach Zeile für Zeile durch das Schema.</p>${schema([6,7,8,9,10,11,12,13,14])}
+   <div class="box merke"><div class="h">Ihr Plan</div><b>1.</b> Handlungskosten vom Bezugspreis, plus.<br><b>2.</b> Gewinn vom Selbstkostenpreis, plus.<br><b>3.</b> Kundenskonto im Hundert.<br><b>4.</b> Kundenrabatt im Hundert.</div>
+   <div class="box tipp"><div class="h">Runden</div>Runden Sie nach jedem Schritt auf 2 Stellen nach dem Komma, also auf ganze Cent. Kleine Abweichungen von 1 bis 2 Cent sind in Ordnung.</div>
+   ${ctab([["","Bezugspreis","400,00 €",""],["+","Handlungskosten 25 %","100,00 €",""],["=","Selbstkostenpreis","500,00 €",""],["+","Gewinn 10 %","50,00 €",""],["=","Barverkaufspreis","550,00 €","ist 98 %"],["+","Kundenskonto 2 %","11,22 €","2 %"],["=","Zielverkaufspreis","561,22 €","100 % beim Skonto, 90 % beim Rabatt"],["+","Kundenrabatt 10 %","62,36 €","10 %"],["=","Listenverkaufspreis netto","623,58 €","100 %"]])}`,
+   ex:{ q:"Bezugspreis 400 €, Handlungskosten 25 %, Gewinn 10 %, Kundenskonto 2 %, Kundenrabatt 10 %. Wie hoch ist der Listenverkaufspreis netto?", steps:["Handlungskosten. 25 % von 400 € = 100 €. Selbstkostenpreis 500 €.","Gewinn. 10 % von 500 € = 50 €. Barverkaufspreis 550 €.","Skonto im Hundert. 550 € sind 98 %. 550 : 98 × 100 = 561,22 €. Das ist der Zielverkaufspreis.","Rabatt im Hundert. 561,22 € sind 90 %. 561,22 : 90 × 100 = 623,58 €.","Der Listenverkaufspreis netto ist <b>623,58 €</b>."]},
+   gen(){
+     const bz = pick([200,300,400,500,600,800,1000]); const h = pick([20,25,30,40,50]); const g = pick([5,10,15,20]); const s = pick([2,3]); const r = pick([5,10,20]);
+     const sk = r2(bz*(1+h/100)), bv = r2(sk*(1+g/100)), zv = r2(bv/(100-s)*100), lv = r2(zv/(100-r)*100);
+     const brutto = Math.random()<.3, lb = r2(lv*1.19);
+     const st = [`Handlungskosten. ${h} % von ${eur(bz)} = ${eur(sk-bz)}. Selbstkostenpreis ${eur(sk)}.`,`Gewinn. ${g} % von ${eur(sk)} = ${eur(r2(bv-sk))}. Barverkaufspreis ${eur(bv)}.`,`Skonto im Hundert. ${eur(bv)} sind ${100-s} %. ${z(bv)} : ${100-s} × 100 = ${eur(zv)} Zielverkaufspreis.`,`Rabatt im Hundert. ${eur(zv)} sind ${100-r} %. ${z(zv)} : ${100-r} × 100 = ${eur(lv)} Listenverkaufspreis netto.`];
+     if (brutto) st.push(`Umsatzsteuer dazu. ${eur(lv)} × 1,19 = ${eur(lb)}.`);
+     st.push(`Der Listenverkaufspreis ${brutto?"brutto":"netto"} ist <b>${eur(brutto?lb:lv)}</b>.`);
+     return { q:`Bezugspreis ${eur(bz)}, Handlungskosten ${h} %, Gewinn ${g} %, Kundenskonto ${s} %, Kundenrabatt ${r} %${brutto?", Umsatzsteuer 19 %":""}. Wie hoch ist der Listenverkaufspreis ${brutto?"brutto":"netto"}?`, a:brutto?lb:lv, u:"€", tol:0.05, steps:st};
+   }}
+ ]};
+
 /* ========== Ansichten ========== */
 const NQ = 5, NEED = 4;
 const app = $("#app");
 function upd(){ $("#xp").textContent = `⭐ ${S.xp} Punkte`; }
 function prog(k){ return S.p[k] || {}; }
-function unlocked(k,i){ return i===0 || (prog(k)[i-1]||0) > 0; }
+function unlocked(k,i){ return true; }
 function starsHtml(n){ let h=""; for(let i=0;i<3;i++) h += i<n ? "★" : '<span class="off">★</span>'; return `<span class="stars">${h}</span>`; }
 function setBack(label, fn){ $("#backt").textContent = label; $("#back").onclick = fn; }
 
 function home(){
   document.documentElement.style.setProperty("--c","#0077A6");
   setBack("Zur Übersicht", () => location.href = "../index.html");
-  let h = `<h1>Kaufmännische Grundlagen</h1><p class="lead">Prozentrechnen und Dreisatz von Anfang an. Ganz einfach erklärt, Schritt für Schritt. Jedes Level schalten Sie mit 4 von 5 richtigen Aufgaben frei.</p><div class="tracks">`;
+  let h = `<h1>Kaufmännische Grundlagen</h1><p class="lead">Prozentrechnen, Dreisatz und Handelskalkulation von Anfang an. Ganz einfach erklärt, Schritt für Schritt. Alle Levels sind frei. Sie können überall einsteigen und jederzeit springen.</p><div class="tracks">`;
   for (const k of Object.keys(T)){
     const tr = T[k], p = prog(k), done = tr.levels.filter((_,i)=>p[i]>0).length;
     h += `<div class="card track" style="--c:${tr.c}" onclick="location.hash='${k}'"><div class="emo">${tr.emo}</div><h2>${tr.name}</h2><p>${tr.desc}</p>
       <div class="pbar"><i style="width:${Math.round(done/tr.levels.length*100)}%"></i></div><div class="pl"><span>${done} von ${tr.levels.length} Levels</span><span>${done===tr.levels.length?"Geschafft 🏆":"Weiter ➜"}</span></div></div>`;
   }
   h += `</div><div class="card"><b style="color:var(--navy)">So lernen Sie hier</b><ol style="margin:8px 0 0;padding-left:22px">
-    <li>Lesen Sie die kurze Erklärung.</li><li>Schauen Sie das Beispiel Schritt für Schritt an.</li><li>Rechnen Sie 5 Aufgaben. Bei einem Fehler bekommen Sie einen Tipp und einen zweiten Versuch.</li><li>Mit 4 richtigen Aufgaben gibt es Level up 🎉</li></ol>
+    <li>Lesen Sie die kurze Erklärung.</li><li>Schauen Sie das Beispiel Schritt für Schritt an.</li><li>Rechnen Sie 5 Aufgaben. Bei einem Fehler bekommen Sie einen Tipp und einen zweiten Versuch.</li><li>Mit 4 richtigen Aufgaben gibt es Level up 🎉 und Sterne.</li><li>Sie können jedes Level wählen. Für Anfänger ist Level 1 der beste Start.</li></ol>
     <p class="small" style="margin-bottom:0">Ein Taschenrechner ist erlaubt. Kommazahlen schreiben Sie mit Komma, zum Beispiel 2,50.</p></div>`;
   app.innerHTML = h; scrollTo(0,0);
 }
@@ -504,7 +675,7 @@ function practice(k,i){
     ok.onclick = () => {
       let good;
       if (x.choices){ if (sel===null){ fb.innerHTML = `<div class="fb hint"><b class="t">Bitte wählen</b>Klicken Sie auf eine Antwort.</div>`; return; } good = sel===x.a; }
-      else { const v = parseNum($("#in").value); if (isNaN(v)){ fb.innerHTML = `<div class="fb hint"><b class="t">Bitte eine Zahl eingeben</b>Zum Beispiel 25 oder 2,50.</div>`; return; } good = Math.abs(v - x.a) < 0.011; }
+      else { const v = parseNum($("#in").value); if (isNaN(v)){ fb.innerHTML = `<div class="fb hint"><b class="t">Bitte eine Zahl eingeben</b>Zum Beispiel 25 oder 2,50.</div>`; return; } good = Math.abs(v - x.a) < (x.tol || 0.011); }
       if (good){ fb.innerHTML = `<div class="fb ok"><b class="t">✓ Richtig${tries?" im zweiten Versuch":""}. Super!</b>So geht der Weg.${stepsHtml}</div>`; finish(true); return; }
       tries++;
       if (tries===1 && (!x.choices || x.choices.length>2)){
@@ -529,9 +700,9 @@ function result(k,i,res){
   setBack("Alle Levels", () => location.hash = k);
   app.innerHTML = `<div class="card res">${pass?`<div class="lvup">LEVEL UP</div><div class="big" style="margin-top:14px">${last?"🏆":"🎉"}</div><h2>${last?"Alle Levels geschafft!":"Level "+(i+1)+" geschafft!"}</h2>${starsHtml(st)}`
     : `<div class="big">💪</div><h2>Fast geschafft!</h2>`}
-    <p>Sie haben <b>${good} von ${NQ}</b> Aufgaben richtig.${pass?(first?" Dafür gibt es 20 Extrapunkte.":""):` Für das nächste Level brauchen Sie ${NEED} richtige. Lesen Sie die Erklärung noch einmal in Ruhe. Die Zahlen sind beim nächsten Versuch neu.`}</p>
+    <p>Sie haben <b>${good} von ${NQ}</b> Aufgaben richtig.${pass?(first?" Dafür gibt es 20 Extrapunkte.":""):` Für Level up und Sterne brauchen Sie ${NEED} richtige. Lesen Sie die Erklärung noch einmal in Ruhe. Die Zahlen sind beim nächsten Versuch neu.`}</p>
     <div class="row" style="justify-content:center">
-      ${pass && !last ? `<button class="btn" onclick="location.hash='${k}/${i+2}'">Weiter zu Level ${i+2} ➜</button>` : ""}
+      ${!last ? `<button class="btn ${pass?"":"ghost"}" onclick="location.hash='${k}/${i+2}'">Weiter zu Level ${i+2} ➜</button>` : ""}
       ${pass && last ? `<button class="btn" onclick="location.hash='${k==="prozent"?"dreisatz":"prozent"}'">${k==="prozent"?"Zum Dreisatz":"Zum Prozentrechnen"} ➜</button>` : ""}
       ${!pass ? `<button class="btn" id="again">Noch einmal üben</button><button class="btn ghost" onclick="lesson('${k}',${i})">Erklärung lesen</button>` : `<button class="btn ghost" id="again">Noch einmal üben</button>`}
     </div></div>`;
