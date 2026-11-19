@@ -6,6 +6,8 @@
 <link rel="icon" href="../assets/logo.png">
 <script>try{if(localStorage.getItem('kba015_ok')!=='1'){location.replace('../index.html');}}catch(e){}</script>
 <style>
+@font-face{font-family:Kalam;src:url(../assets/kalam-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Kalam;src:url(../assets/kalam-700.woff2) format("woff2");font-weight:700}
 @font-face{font-family:Inter;src:url(../assets/inter-400.woff2) format("woff2");font-weight:400}
 @font-face{font-family:Inter;src:url(../assets/inter-600.woff2) format("woff2");font-weight:600}
 @font-face{font-family:Inter;src:url(../assets/inter-700.woff2) format("woff2");font-weight:700}
@@ -85,6 +87,7 @@ h1{margin:6px 0 4px;font-size:28px;line-height:1.2;font-weight:800;color:var(--n
 .sheet th{color:var(--navy);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
 .tabs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px;box-shadow:var(--shadow)}
 .tabs button{border:0;background:none;padding:8px 14px;border-radius:9px;font-weight:700;font-size:14px;color:var(--muted)}.tabs button.on{background:var(--navy);color:#fff}
+.sketch{margin:14px 0 16px;padding:12px 10px 8px;border-radius:16px;background:#fffdf6;border:1.5px dashed #e3d7b0}.sketch .skh{font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#9a6d00;margin:0 6px 6px}#skz{min-height:60px}
 .foot{margin-top:30px;text-align:center;color:var(--muted);font-size:12px}
 .small{font-size:14px;color:var(--muted)}
 .hk{border-collapse:collapse;width:100%;max-width:620px;font-size:15px;margin:10px 0}
@@ -102,6 +105,7 @@ h1{margin:6px 0 4px;font-size:28px;line-height:1.2;font-weight:800;color:var(--n
 </div></div>
 <div class="wrap" id="app"></div>
 <div class="foot">© 2026 Waybuild Akademie, Waybuild UG (haftungsbeschränkt). Alle Rechte vorbehalten. · <a href="https://www.waybuild.de" target="_blank" rel="noopener">www.waybuild.de</a></div>
+<script src="../assets/rough.js"></script>
 <script>
 "use strict";
 /* ========== Hilfen ========== */
@@ -586,6 +590,228 @@ T.handel = { name:"Handelskalkulation", emo:"🛒", c:"#1d8a6b",
    }}
  ]};
 
+/* ========== Rough.js Skizzen ========== */
+const SVGNS = "http://www.w3.org/2000/svg";
+const SK_COL = { cut:"#c0392b", add:"#1d8a6b", ink:"#1b2b3a", muted:"#5b6b7a" };
+let SEED = 1;
+function skNew(host, w, h){
+  host.innerHTML = "";
+  const svg = document.createElementNS(SVGNS,"svg");
+  svg.setAttribute("viewBox",`0 0 ${w} ${h}`); svg.setAttribute("width","100%"); svg.style.display="block"; svg.style.maxWidth=w+"px"; svg.style.margin="0 auto";
+  host.appendChild(svg); SEED = 7;
+  const rc = rough.svg(svg);
+  const o = x => Object.assign({roughness:1.1, bowing:1.2, strokeWidth:2, seed:SEED++}, x||{});
+  const api = {
+    svg, w, h,
+    add(n){ svg.appendChild(n); return n; },
+    rect(x,y,ww,hh,opt){ return api.add(rc.rectangle(x,y,ww,hh,o(opt))); },
+    line(x1,y1,x2,y2,opt){ return api.add(rc.line(x1,y1,x2,y2,o(opt))); },
+    circle(x,y,d,opt){ return api.add(rc.circle(x,y,d,o(opt))); },
+    path(p,opt){ return api.add(rc.path(p,o(opt))); },
+    arc(x,y,ww,hh,a,b,closed,opt){ return api.add(rc.arc(x,y,ww,hh,a,b,closed,o(opt))); },
+    text(x,y,s,opt){ opt = opt||{}; const t = document.createElementNS(SVGNS,"text");
+      t.setAttribute("x",x); t.setAttribute("y",y); t.setAttribute("text-anchor",opt.a||"middle"); t.setAttribute("dominant-baseline","middle");
+      t.setAttribute("font-family", opt.f || "Kalam, 'Comic Sans MS', cursive"); t.setAttribute("font-size", opt.s||20); t.setAttribute("font-weight", opt.b?700:400);
+      t.setAttribute("fill", opt.c || SK_COL.ink); t.textContent = s; return api.add(t); },
+    arrow(x1,y1,x2,y2,color,label,lpos){ color = color||SK_COL.ink;
+      api.line(x1,y1,x2,y2,{stroke:color,strokeWidth:2.4});
+      const ang = Math.atan2(y2-y1,x2-x1), L = 13;
+      api.line(x2,y2,x2-L*Math.cos(ang-0.45),y2-L*Math.sin(ang-0.45),{stroke:color,strokeWidth:2.4});
+      api.line(x2,y2,x2-L*Math.cos(ang+0.45),y2-L*Math.sin(ang+0.45),{stroke:color,strokeWidth:2.4});
+      if (label){ const mx=(x1+x2)/2, my=(y1+y2)/2; const vert = Math.abs(x2-x1) < Math.abs(y2-y1);
+        api.text(vert? mx+14 : mx, vert? my : my-18, label, {c:color, s:22, b:true, a: vert?"start":"middle"}); }
+    },
+    brace(x1,x2,y,label,color,up){ color = color||SK_COL.muted; const d = up?-1:1;
+      api.path(`M${x1} ${y} q0 ${8*d} 10 ${8*d} L${(x1+x2)/2-8} ${y+8*d} q8 0 8 ${8*d} q0 ${-8*d} 8 ${-8*d} L${x2-10} ${y+8*d} q10 0 10 ${-8*d}`,{stroke:color,strokeWidth:1.6,roughness:.6});
+      if (label) api.text((x1+x2)/2, y+30*d, label, {c:color, s:19, b:true});
+    }
+  };
+  return api;
+}
+function wrapLines(s){ return String(s).split("|"); }
+
+/* Kette aus Kästen mit Pfeilen. nodes [{t, s, icon}], ops ["÷ 3", ...] */
+function skFlow(host, W, spec){
+  const n = spec.nodes.length, vert = W < 560, c = getComputedStyle(document.documentElement).getPropertyValue("--c").trim() || "#0077A6";
+  const bw = vert ? Math.min(260, W-80) : Math.min(190, (W - 40 - (n-1)*90)/n), bh = spec.nodes.some(x=>x.icon) ? 128 : 92;
+  const gap = vert ? 64 : (W - 40 - n*bw)/(n-1 || 1);
+  const capN = spec.cap ? wrapCap(spec.cap, W).length : 0;
+  const H = (vert ? n*bh + (n-1)*gap + 30 : bh + 40) + capN*24 + (capN?14:0);
+  const k = skNew(host, W, H);
+  spec.nodes.forEach((nd,i) => {
+    const x = vert ? (W-bw)/2 : 20 + i*(bw+gap), y = vert ? 15 + i*(bh+gap) : 20;
+    const hl = nd.hl || i === n-1;
+    k.rect(x,y,bw,bh,{fill: hl ? c : "#dfe9f1", fillStyle:"hachure", hachureGap:7, fillWeight:1, stroke: hl ? c : SK_COL.ink});
+    k.rect(x+10,y+10,bw-20,bh-20,{fill:"#fff", fillStyle:"solid", stroke:"none", roughness:0});
+    let ty = y + bh/2;
+    if (nd.icon){ drawIcon(k, nd.icon, x+bw/2, y+34, c); ty = y + bh - 38; }
+    const lines = wrapLines(nd.t);
+    const fs = Math.min(23, ...lines.map(l => fitS(l, 23, bw-22)));
+    lines.forEach((l,j) => k.text(x+bw/2, ty + (j-(lines.length-1)/2)*24 - (nd.s?10:0), l, {s:fs, b:true, c: hl? c : SK_COL.ink}));
+    if (nd.s) k.text(x+bw/2, ty + (lines.length-1)*12 + 16, nd.s, {s:18, c:SK_COL.muted});
+    if (i < n-1){ const op = spec.ops[i] || "";
+      const col = /:|÷|minus/.test(op) ? SK_COL.cut : /×|plus|\+/.test(op) ? SK_COL.add : SK_COL.ink;
+      if (vert) k.arrow(W/2, y+bh+6, W/2, y+bh+gap-6, col, op);
+      else k.arrow(x+bw+8, y+bh/2, x+bw+gap-8, y+bh/2, col, op);
+    }
+  });
+  if (spec.cap) wrapCap(spec.cap, W).forEach((l,i,a) => k.text(W/2, k.h-14-(a.length-1-i)*24, l, {s:18, c:SK_COL.muted}));
+}
+function drawIcon(k, ic, cx, cy, c){
+  const n = Math.min(ic.n, 6), sp = ic.t==="person" ? 22 : 20, x0 = cx - (n-1)*sp/2;
+  for (let i=0;i<n;i++){ const x = x0 + i*sp;
+    if (ic.t==="person"){ k.circle(x, cy-12, 11, {stroke:c, strokeWidth:1.8}); k.line(x, cy-6, x, cy+10, {stroke:c, strokeWidth:1.8}); k.line(x-7,cy+2,x+7,cy+2,{stroke:c,strokeWidth:1.6}); k.line(x,cy+10,x-6,cy+20,{stroke:c,strokeWidth:1.6}); k.line(x,cy+10,x+6,cy+20,{stroke:c,strokeWidth:1.6}); }
+    else { k.rect(x-7, cy-16, 14, 32, {stroke:c, fill:c, fillStyle:"hachure", hachureGap:4, strokeWidth:1.6}); }
+  }
+  if (ic.n > 6) k.text(x0 + n*sp + 4, cy, "…", {s:20, c, a:"start"});
+}
+
+/* Gestapelte Balken. rows [{title, segs:[{v,t,k}], brace:[{a,b,t,c}], res}] */
+function estW(t, s){ return String(t).length * s * 0.5 + 8; }
+function fitS(t, s, maxW){ return Math.max(14, Math.min(s, maxW / (String(t).length*0.5 + 0.4))); }
+function skBars(host, W, spec){
+  const c = getComputedStyle(document.documentElement).getPropertyValue("--c").trim() || "#0077A6";
+  const narrow = W < 560, max = spec.max, x0 = 20, bw = W - 40;
+  const k = skNew(host, W, 400); let y0 = 0;
+  const colOf = t => /^minus/.test(t||"") ? SK_COL.cut : /^plus/.test(t||"") ? SK_COL.add : c;
+  spec.rows.forEach(r => {
+    const bh = 46;
+    const tS = fitS(r.title||"", 21, narrow ? bw : bw*0.6);
+    if (r.title) k.text(x0, y0+22, r.title, {s:tS, b:true, a:"start"});
+    if (r.res && !narrow) k.text(W-20, y0+22, r.res, {s:fitS(r.res,20,bw*0.38), b:true, a:"end", c:colOf(r.res)});
+    const y = y0 + 70; let x = x0; const above = [];
+    r.segs.forEach(sg => {
+      const w = sg.v/max*bw;
+      const col = sg.k==="cut" ? SK_COL.cut : sg.k==="add" ? SK_COL.add : sg.k==="part" ? c : "#9fb6c8";
+      k.rect(x, y, w, bh, {fill: col, fillStyle: sg.k==="base" ? "hachure" : "cross-hatch", hachureGap: sg.k==="base"?9:6, fillWeight: sg.k==="base"?1:1.4, stroke: sg.k==="cut" ? SK_COL.cut : SK_COL.ink, strokeLineDash: sg.k==="cut" ? [6,5] : undefined});
+      if (sg.t){ const big = w > estW(sg.t,21) + 10;
+        if (big){ const tb = k.text(x+w/2, y+bh/2, sg.t, {s:21, b:true});
+          const bb = tb.getBBox(); const bg = document.createElementNS(SVGNS,"rect"); bg.setAttribute("x",bb.x-5); bg.setAttribute("y",bb.y-1); bg.setAttribute("width",bb.width+10); bg.setAttribute("height",bb.height+2); bg.setAttribute("rx",6); bg.setAttribute("fill","#fff"); bg.setAttribute("opacity",".9"); k.svg.insertBefore(bg, tb); }
+        else k.text(clampX(x+w/2, sg.t, 18, W), y-14, sg.t, {s:18, b:true, c:col}); }
+      x += w;
+    });
+    const placed = []; let maxLine = 0;
+    (r.brace||[]).forEach(b => { const xa = x0 + b.a/max*bw, xb = x0 + b.b/max*bw; const col = b.c==="cut"?SK_COL.cut:b.c==="add"?SK_COL.add:b.c==="part"?c:SK_COL.muted;
+      k.brace(xa+2, xb-2, y+bh+8, null, col);
+      const cx = clampX((xa+xb)/2, b.t, 19, W), hw = estW(b.t,19)/2; let line = 0;
+      while (placed.some(p => p[2]===line && !(cx+hw < p[0] || cx-hw > p[1]))) line++;
+      placed.push([cx-hw, cx+hw, line]); maxLine = Math.max(maxLine, line);
+      k.text(cx, y+bh+40+line*26, b.t, {s:19, b:true, c:col}); });
+    y0 = y + bh + 40 + maxLine*26 + 22;
+    if (r.res && narrow){ k.text(x0, y0+8, r.res, {s:fitS(r.res,20,bw), b:true, a:"start", c:colOf(r.res)}); y0 += 36; }
+    y0 += 14;
+  });
+  const caps = spec.cap ? wrapCap(spec.cap, W) : [];
+  caps.forEach((l,i) => k.text(W/2, y0 + 6 + i*25, l, {s:18, c:SK_COL.muted}));
+  const H = y0 + caps.length*25 + 8; k.svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+}
+function clampX(x, t, s, W){ const half = estW(t,s)/2; return Math.max(half+4, Math.min(W-half-4, x)); }
+function wrapCap(t, W, cw){ const max = Math.floor((W-30)/(cw||9.2)); const out = []; let line = "";
+  String(t).split(" ").forEach(w => { if ((line+" "+w).trim().length > max){ out.push(line); line = w; } else line = (line+" "+w).trim(); }); if (line) out.push(line); return out; }
+
+/* Liegende Balken für Preise. items [{t, v, g}] g e=Einkauf v=Verkauf */
+function skHBars(host, W, spec){
+  const c = getComputedStyle(document.documentElement).getPropertyValue("--c").trim();
+  const narrow = W < 560, vals = spec.items.map(i=>i.v), max = Math.max(...vals), base = Math.min(...vals)*0.8;
+  const lw = narrow ? 20 : 230, rh = narrow ? 54 : 38, avail = W - lw - (narrow ? 100 : 110);
+  const caps = spec.cap ? wrapCap(spec.cap, W) : [];
+  const k = skNew(host, W, spec.items.length*rh + 24 + caps.length*24);
+  spec.items.forEach((it,i) => { const y = 10 + i*rh, w = avail*(it.v-base)/(max-base) + 20;
+    const col = it.g==="e" ? "#d0731c" : c, by = narrow ? y+22 : y+5;
+    if (narrow) k.text(lw, y+10, it.t, {s:17, a:"start", b:true}); else k.text(lw-10, y+rh/2-3, it.t, {s:19, a:"end", b:true});
+    k.rect(lw, by, w, narrow ? 24 : rh-16, {fill: col, fillStyle:"hachure", hachureGap:6, stroke: col});
+    k.text(lw + w + 10, by + (narrow?12:(rh-16)/2), z(it.v,2)+" €", {s: narrow?16:19, a:"start", c:SK_COL.muted});
+  });
+  caps.forEach((l,i) => k.text(W/2, spec.items.length*rh + 26 + i*24, l, {s:18, c:SK_COL.muted}));
+}
+
+/* 100er Feld */
+function skGrid(host, W, spec){
+  const c = getComputedStyle(document.documentElement).getPropertyValue("--c").trim();
+  const sz = Math.min(26, (W-60)/10), gw = sz*10, caps = wrapCap(spec.cap, W, 11), k = skNew(host, W, gw + 44 + caps.length*28);
+  const x0 = (W-gw)/2;
+  for (let i=0;i<100;i++){ const r = Math.floor(i/10), q = i%10, on = i < spec.k;
+    k.rect(x0+q*sz+2, 10+r*sz+2, sz-4, sz-4, {fill: on ? c : undefined, fillStyle:"solid", stroke: on ? c : "#b8c6d2", strokeWidth:1.2, roughness:.8}); }
+  caps.forEach((l,i) => k.text(W/2, gw + 36 + i*28, l, {s:21, b:true, c}));
+}
+
+/* Pizza plus Hälfte-Balken */
+function skPizza(host, W, spec){
+  const c = getComputedStyle(document.documentElement).getPropertyValue("--c").trim();
+  const narrow = W < 560, H = narrow ? 420 : 240, k = skNew(host, W, H);
+  const items = [{n:4,on:1,t:"1 von 4 Stücken = 25 %"},{n:2,on:1,t:"1 von 2 Hälften = 50 %"},{n:10,on:1,t:"1 von 10 Teilen = 10 %"}];
+  const per = narrow ? 1 : 3;
+  items.forEach((it,i) => {
+    const cx = narrow ? W/2 : W/6 + i*W/3, cy = narrow ? 70 + i*135 : 100, d = narrow ? 110 : 150;
+    if (narrow && i>2) return;
+    const step = 2*Math.PI/it.n;
+    for (let j=0;j<it.n;j++){ const a = -Math.PI/2 + j*step;
+      k.arc(narrow? cx-60 : cx, cy, d, d, a, a+step, true, {fill: j<it.on ? c : "#eef3f7", fillStyle: j<it.on ? "cross-hatch":"solid", hachureGap:6, stroke:SK_COL.ink, strokeWidth:1.6}); }
+    if (narrow){ const [l1,l2] = it.t.split(" = "); k.text(cx+10, cy-12, l1, {s:18, b:true, a:"start"}); k.text(cx+10, cy+14, "= "+l2, {s:20, b:true, a:"start", c}); }
+    else k.text(cx, cy+d/2+30, it.t, {s:20, b:true});
+  });
+}
+
+/* Gerade gegen umgekehrt */
+function skSeesaw(host, W){
+  const c = getComputedStyle(document.documentElement).getPropertyValue("--c").trim();
+  const narrow = W < 560, pw = narrow ? W-40 : (W-60)/2, H = narrow ? 470 : 250, k = skNew(host, W, H);
+  [["Gerade","je mehr, desto mehr","mehr Stück","mehr Geld",1],["Umgekehrt","je mehr, desto weniger","mehr Leute","weniger Zeit",-1]].forEach((p,i) => {
+    const x = narrow ? 20 : 20 + i*(pw+20), y = narrow ? 10 + i*230 : 10;
+    k.rect(x, y, pw, 220, {stroke: i? SK_COL.cut : SK_COL.add, strokeWidth:2});
+    k.text(x+pw/2, y+28, p[0], {s:26, b:true, c: i? SK_COL.cut : SK_COL.add});
+    k.text(x+pw/2, y+58, p[1], {s:19, c:SK_COL.muted});
+    const ax = x + pw*0.27, bx = x + pw*0.73, ls = narrow ? 17 : 19;
+    k.arrow(ax, y+170, ax, y+95, SK_COL.add); k.text(ax, y+195, p[2], {s:ls, b:true});
+    if (p[4] > 0) k.arrow(bx, y+170, bx, y+95, SK_COL.add); else k.arrow(bx, y+95, bx, y+170, SK_COL.cut);
+    k.text(bx, y+195, p[3], {s:ls, b:true});
+  });
+}
+
+const SKETCH = {
+ "prozent/0": ["grid",{k:30, cap:"30 von 100 Kästchen sind blau. Das sind 30 %."}],
+ "prozent/1": ["pizza",{}],
+ "prozent/2": ["flow",{nodes:[{t:"300 €",s:"100 %"},{t:"3 €",s:"1 %"},{t:"21 €",s:"7 %"}], ops:[": 100","× 7"], cap:"Erst auf 1 %, dann auf die gesuchten Prozent."}],
+ "prozent/3": ["bars",{max:80, rows:[{title:"Jacke 80 €, 25 % Rabatt", segs:[{v:20,t:"20 €",k:"part"},{v:60,t:"60 €",k:"base"}], brace:[{a:0,b:20,t:"25 %",c:"part"},{a:20,b:80,t:"75 %"}], res:"ganzer Balken 80 € = 100 %"}], cap:"Der ganze Balken ist der Grundwert. Das blaue Stück ist der Prozentwert 20 €. Die 25 % sind der Prozentsatz."}],
+ "prozent/4": ["flow",{nodes:[{t:"30 von 120",s:"Teil und Ganzes"},{t:"0,25",s:"Ergebnis"},{t:"25 %",s:"Prozentsatz"}], ops:["30 : 120","× 100"]}],
+ "prozent/5": ["flow",{nodes:[{t:"15 €",s:"5 %"},{t:"3 €",s:"1 %"},{t:"300 €",s:"100 %"}], ops:[": 5","× 100"], cap:"Vom Teil über 1 % zum Ganzen."}],
+ "prozent/6": ["bars",{max:220, rows:[{title:"Rabatt 10 %", segs:[{v:180,t:"180 €",k:"base"},{v:20,t:"20 €",k:"cut"}], brace:[{a:180,b:200,t:"minus",c:"cut"}], res:"Sie zahlen 180 €"},{title:"Umsatzsteuer 19 % auf netto 100 €", segs:[{v:100,t:"100 €",k:"base"},{v:19,t:"19 €",k:"add"}], brace:[{a:100,b:119,t:"plus",c:"add"}], res:"brutto 119 €"}]}],
+ "prozent/7": ["bars",{max:2380, rows:[{title:"Rechnung 2.380 € brutto", segs:[{v:2000,t:"netto 2.000 €",k:"base"},{v:380,t:"380 €",k:"add"}], brace:[{a:0,b:2000,t:"100 %"},{a:2000,b:2380,t:"19 %",c:"add"}], res:"zusammen 119 %"}], cap:"Brutto ist 119 %. Deshalb teilen wir durch 119."}],
+ "dreisatz/0": ["flow",{nodes:[{t:"1 Ordner",s:"3 €",icon:{t:"doc",n:1}},{t:"5 Ordner",s:"15 €",icon:{t:"doc",n:5}}], ops:["× 5"]}],
+ "dreisatz/1": ["flow",{nodes:[{t:"4 Hefte",s:"8 €",icon:{t:"doc",n:4}},{t:"1 Heft",s:"2 €",icon:{t:"doc",n:1}}], ops:[": 4"]}],
+ "dreisatz/2": ["flow",{nodes:[{t:"3 kg",s:"12 €"},{t:"1 kg",s:"4 €"},{t:"5 kg",s:"20 €"}], ops:[": 3","× 5"], cap:"Satz 1 aufschreiben. Satz 2 auf 1. Satz 3 auf die gesuchte Menge."}],
+ "dreisatz/3": ["flow",{nodes:[{t:"8 Stunden",s:"120 €"},{t:"1 Stunde",s:"15 €"},{t:"20 Stunden",s:"300 €"}], ops:[": 8","× 20"]}],
+ "dreisatz/4": ["flow",{nodes:[{t:"3 Personen",s:"8 Stunden",icon:{t:"person",n:3}},{t:"1 Person",s:"24 Stunden",icon:{t:"person",n:1}},{t:"6 Personen",s:"4 Stunden",icon:{t:"person",n:6}}], ops:["× 3",": 6"], cap:"Umgekehrt. Erst mal, dann teilen."}],
+ "dreisatz/5": ["seesaw",{}],
+ "dreisatz/6": ["flow",{nodes:[{t:"Was suche ich?",s:"kommt nach rechts"},{t:"mehr und mehr?|oder weniger?",s:"gerade oder umgekehrt"},{t:"erst auf 1|dann auf gesucht",s:"rechnen"}], ops:["",""]}],
+ "dreisatz/7": ["flow",{nodes:[{t:"100 %",s:"250 €"},{t:"1 %",s:"2,50 €"},{t:"19 %",s:"47,50 €"}], ops:[": 100","× 19"], cap:"Prozentrechnen ist auch ein Dreisatz."}],
+ "handel/0": ["hbars",{items:[{t:"Listeneinkaufspreis",v:500,g:"e"},{t:"Zieleinkaufspreis",v:450,g:"e"},{t:"Bareinkaufspreis",v:441,g:"e"},{t:"Bezugspreis",v:465,g:"e"},{t:"Selbstkostenpreis",v:581.25,g:"v"},{t:"Barverkaufspreis",v:639.38,g:"v"},{t:"Zielverkaufspreis",v:652.43,g:"v"},{t:"Listenverkaufspreis",v:724.92,g:"v"}], cap:"Orange ist der Einkauf, er geht bergab. Danach geht es bergauf."}],
+ "handel/1": ["bars",{max:500, rows:[{title:"Listeneinkaufspreis 500 €", segs:[{v:450,t:"450 €",k:"base"},{v:50,t:"50 €",k:"cut"}], brace:[{a:0,b:450,t:"Zieleinkaufspreis"},{a:450,b:500,t:"10 % Rabatt",c:"cut"}], res:"minus Rabatt"}]}],
+ "handel/2": ["bars",{max:450, rows:[{title:"Zieleinkaufspreis 450 €", segs:[{v:441,t:"441 €",k:"base"},{v:9,t:"9 €",k:"cut"}], brace:[{a:0,b:441,t:"Bareinkaufspreis"},{a:441,b:450,t:"2 % Skonto",c:"cut"}], res:"minus Skonto"}]}],
+ "handel/3": ["bars",{max:465, rows:[{title:"Bareinkaufspreis 441 €", segs:[{v:441,t:"441 €",k:"base"},{v:24,t:"24 €",k:"add"}], brace:[{a:0,b:465,t:"Bezugspreis 465 €"}], res:"plus Fracht"}]}],
+ "handel/4": ["bars",{max:500, rows:[{title:"Bezugspreis 400 €", segs:[{v:400,t:"400 €",k:"base"},{v:100,t:"100 €",k:"add"}], brace:[{a:0,b:500,t:"Selbstkostenpreis 500 €"}], res:"plus 25 % Handlungskosten"}]}],
+ "handel/5": ["bars",{max:550, rows:[{title:"Selbstkostenpreis 500 €", segs:[{v:500,t:"500 €",k:"base"},{v:50,t:"50 €",k:"add"}], brace:[{a:0,b:550,t:"Barverkaufspreis 550 €"}], res:"plus 10 % Gewinn"}]}],
+ "handel/6": ["bars",{max:1000, rows:[{title:"Zielverkaufspreis 1.000 € = 100 %", segs:[{v:980,t:"980 €",k:"base"},{v:20,t:"20 €",k:"add"}], brace:[{a:0,b:980,t:"Barverkaufspreis 98 %"},{a:980,b:1000,t:"Skonto 2 %",c:"add"}], res:"plus Skonto im Hundert"}], cap:"Der Kunde zieht 2 % vom großen Preis ab. Übrig bleiben genau 980 €."}],
+ "handel/7": ["hbars",{items:[{t:"Bezugspreis",v:400,g:"e"},{t:"Selbstkostenpreis",v:500,g:"v"},{t:"Barverkaufspreis",v:550,g:"v"},{t:"Zielverkaufspreis",v:561.22,g:"v"},{t:"Listenverkaufspreis",v:623.58,g:"v"}], cap:"Beim Verkauf kommt Zeile für Zeile etwas dazu."}]
+};
+const SK_FN = { flow:skFlow, bars:skBars, hbars:skHBars, grid:skGrid, pizza:skPizza, seesaw:skSeesaw };
+let skCur = null;
+function drawSketch(){
+  const host = document.getElementById("skz"); if (!host || !skCur || typeof rough === "undefined") return;
+  const W = Math.max(300, Math.min(760, Math.floor(host.clientWidth)));
+  const [fn, spec] = skCur; try { SK_FN[fn](host, W, spec); } catch(e){ host.innerHTML = ""; console.log(e); }
+}
+let skT; window.addEventListener("resize", () => { clearTimeout(skT); skT = setTimeout(drawSketch, 150); });
+function mountSketch(key){
+  skCur = SKETCH[key]; if (!skCur) return;
+  const learn = document.querySelector(".card.learn"); if (!learn) return;
+  const box = document.createElement("div"); box.className = "sketch";
+  box.innerHTML = '<div class="skh">✏️ Skizze zum Verstehen</div><div id="skz"></div>';
+  const p = learn.querySelector("p"); p ? p.after(box) : learn.prepend(box);
+  const go = () => drawSketch();
+  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load("20px Kalam"), document.fonts.load("bold 20px Kalam")]).then(go, go); else go();
+}
+
 /* ========== Ansichten ========== */
 const NQ = 5, NEED = 4;
 const app = $("#app");
@@ -634,6 +860,7 @@ function lesson(k,i){
    <div class="card learn">${L.learn}</div>
    <div class="card"><b style="color:var(--navy);font-size:18px">Beispiel Schritt für Schritt</b><p class="q" style="margin-top:8px">${L.ex.q}</p><ol class="steps" id="exs"></ol>
    <div class="row"><button class="btn" id="nx">Ersten Schritt zeigen</button></div></div>`;
+  mountSketch(`${k}/${i}`);
   let sI = 0; const nx = $("#nx");
   nx.onclick = () => {
     if (sI < L.ex.steps.length){ $("#exs").insertAdjacentHTML("beforeend", `<li>${L.ex.steps[sI]}</li>`); sI++;
