@@ -32,7 +32,8 @@ window.MEDIA = {
   },
   "tag06": {
     "video": "media/tag06/video.mp4",
-    "podcast": "media/tag06/podcast.m4a"
+    "podcast": "media/tag06/podcast.m4a",
+    "untertitel": "media/tag06/video.de.vtt"
   },
   "tag07": {
     "video": "",
