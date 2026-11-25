@@ -42,7 +42,8 @@ window.MEDIA = {
   },
   "tag08": {
     "video": "media/tag08/video.mp4",
-    "podcast": "media/tag08/podcast.m4a"
+    "podcast": "media/tag08/podcast.m4a",
+    "untertitel": "media/tag08/video.de.vtt"
   },
   "tag09": {
     "video": "",
