@@ -46,8 +46,8 @@ window.MEDIA = {
     "untertitel": "media/tag08/video.de.vtt"
   },
   "tag09": {
-    "video": "",
-    "podcast": ""
+    "video": "media/tag09/video.mp4",
+    "podcast": "media/tag09/podcast.m4a"
   },
   "tag10": {
     "video": "",
